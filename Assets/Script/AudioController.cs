@@ -16,7 +16,7 @@ public class AudioController : MonoBehaviour
         PlayClip();
     }
     void Update() {
-        if (!bgmSource.isPlaying) {
+        if (!bgmSource.isPlaying && audioClips.Length != 0) {
             PlayClip();
         }
     }
