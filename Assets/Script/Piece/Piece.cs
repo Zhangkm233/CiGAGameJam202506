@@ -24,7 +24,7 @@ public abstract class Piece : MonoBehaviour
     // --- 棋盘位置 ---
     public Vector2Int BoardPosition { get; set; } // 棋子在棋盘上的网格坐标
 
-    // --- 事件 (UI更新、日志...) ---
+    // --- 事件 (用于UI更新、日志等) ---
     public delegate void OnPieceStateChanged(Piece piece, PieceState newState);
     public static event OnPieceStateChanged OnPieceStateChangedEvent; // 棋子状态改变时触发
 
@@ -49,7 +49,6 @@ public abstract class Piece : MonoBehaviour
         StateMachine.CurrentState?.OnUpdate();
     }
 
-
     // 初始化棋子的性格和在棋盘上的初始位置
     public void InitializePiece(Personality personality, Vector2Int initialPosition)
     {
@@ -60,20 +59,25 @@ public abstract class Piece : MonoBehaviour
         CurrentMood.SetInitialMood(personality.InitialMoodLevel);
     }
 
-    // --- 抽象方法：具体棋子实现其特有的移动和攻击规则 ---
-
-    // 计算该棋子所有可能的合法移动位置
-    public abstract List<Vector2Int> GetPossibleMoves(); 
-
+    // --- 抽象方法：由具体棋子类型实现其特有的移动和攻击规则 ---
+    // 计算该棋子所有可能的合法移动位置 (包括移动和攻击)
+    public abstract List<Vector2Int> GetPossibleMoves(/*TODO:需要BoardManager类型参数*/ object boardManager); // 需要BoardManager提供棋盘信息和敌我判断
 
     // 检查一个目标位置对于当前棋子是否是有效的移动或攻击
-    public abstract bool IsValidMove(Vector2Int targetPosition); 
+    public abstract bool IsValidMove(Vector2Int targetPosition, /*TODO:需要BoardManager类型参数*/ object boardManager); // 需要BoardManager提供棋盘信息和敌我判断
 
     // 执行棋子的移动操作。
     public virtual void MoveTo(Vector2Int targetPosition)
     {
+        // TODO:在实际移动之前，需要先检查目标位置是否有棋子，并处理吃子逻辑
+        // 如果目标位置有棋子且是敌人，则切换到攻击状态
+        // 如果目标位置有棋子且是友方，则不允许移动
+        // 如果目标位置为空，则直接移动
+
         BoardPosition = targetPosition; // 更新棋子的内部坐标
         Debug.Log($"{Type} 内部位置更新到 {BoardPosition}");
+
+        // 消耗一次移动次数在PieceMovingState中处理，这里只更新位置
     }
 
     // 处理棋子攻击另一个目标棋子的逻辑
@@ -84,26 +88,23 @@ public abstract class Piece : MonoBehaviour
         // 可以添加攻击动画、音效
     }
 
-
     // 回合开始时调用的方法
-
-    public virtual void OnTurnStart()
+    public virtual void OnTurnStart(/* TODO: 需要 BoardManager 类型参数 */ object boardManager) // 传入BoardManager以便在需要时获取棋盘信息
     {
         CurrentMovementCount = PiecePersonality.BaseMovementCount; // 重置本回合的移动次数
-        CurrentMood.ApplyPersonalityEffectOnTurnStart(this); // 应用基于心情的性格效果
+        //CurrentMood.ApplyPersonalityEffectOnTurnStart(this, boardManager); // 应用基于心情的性格效果，需要BoardManager
         Debug.Log($"{Type} 在 {BoardPosition} 回合开始。心情: {CurrentMood.CurrentMoodLevel}, 移动次数: {CurrentMovementCount}");
     }
 
     // 回合结束时调用的方法
-    public virtual void OnTurnEnd()
+    public virtual void OnTurnEnd(/*TODO: 需要 BoardManager 类型参数*/ object boardManager) // 传入BoardManager获取周围信息
     {
-        CurrentMood.UpdateMoodBasedOnSurroundings(BoardPosition); 
-        CurrentMood.ApplyPersonalityEffectOnTurnEnd(this); // 应用基于心情的性格效果
+        //CurrentMood.UpdateMoodBasedOnSurroundings(BoardPosition, boardManager); // 需要BoardManager提供周围棋子信息
+        //CurrentMood.ApplyPersonalityEffectOnTurnEnd(this, boardManager); // 应用基于心情的性格效果，需要BoardManager
         Debug.Log($"{Type} 在 {BoardPosition} 回合结束。新心情: {CurrentMood.CurrentMoodLevel}");
     }
 
-    // --- 辅助方法,触发事件和回调 ---
-
+    // --- 辅助方法，用于触发事件和回调 ---
     // 通知外部监听者棋子状态已改变。
     public void SetState(PieceState newState)
     {
@@ -111,10 +112,15 @@ public abstract class Piece : MonoBehaviour
         // 可以添加一些通用的视觉or音效？抖一抖？
     }
 
-
     // 通知外部监听者棋子心情已改变
     public void OnMoodUpdated(Mood oldMood, Mood newMood)
     {
         OnMoodChangedEvent?.Invoke(this, oldMood, newMood);
+    }
+
+    // 判断棋子是否是友方
+    public bool IsFriendly()
+    {
+        return Type != PieceType.Enemy;
     }
 }
