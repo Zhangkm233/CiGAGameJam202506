@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5557350501309122309}
   - component: {fileID: 3537266134835233766}
   m_Layer: 5
-  m_Name: UnitType
+  m_Name: PieceType
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 1923797719516057479}
   - component: {fileID: 8547522166546477038}
   m_Layer: 5
-  m_Name: UnitCanvas
+  m_Name: PieceCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -220,7 +220,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8547522166546477038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,9 +250,9 @@ GameObject:
   - component: {fileID: 9061685279367806224}
   - component: {fileID: 80063893223198122}
   - component: {fileID: 6414178430686387898}
-  - component: {fileID: 5352204067271528995}
+  - component: {fileID: 8692395426246906084}
   m_Layer: 0
-  m_Name: UnitPrefab
+  m_Name: PiecePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -377,7 +377,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: -0.0021820068, y: 0}
   m_Radius: 0.38872433
---- !u!114 &5352204067271528995
+--- !u!114 &8692395426246906084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -386,9 +386,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8176771909976043857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45c12624a18e67f45993df9a9a88f1e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 85fa09e59b78330488877746f5be1a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTile: {fileID: 0}
-  x: 0
-  y: 0
+  Type: 0
+  _currentMovementCount: 0

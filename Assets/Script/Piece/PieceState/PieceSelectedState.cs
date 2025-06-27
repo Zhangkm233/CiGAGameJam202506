@@ -13,8 +13,8 @@ public class PieceSelectedState : PieceState
         Debug.Log($"{_piece.name} 进入选中状态.");
         // TODO:突出显示选中棋子，例如改变颜色或添加选中特效
         // 需要BoardManager来获取和显示合法的移动和攻击位置
-        // _possibleMoves = _piece.GetPossibleMoves(BoardManager.Instance); // Assuming BoardManager.Instance is available
-        // (BoardManager.Instance as BoardManager)?.HighlightMoves(_possibleMoves);
+        _possibleMoves = _piece.GetPossibleMoves(BoardManager.Instance); // Assuming BoardManager.Instance is available
+        (BoardManager.Instance as BoardManager)?.HighlightMoves(_possibleMoves);
     }
 
     public override void OnUpdate()

@@ -30,7 +30,7 @@ public class PawnPiece : Piece
             //     }
             // }
         }
-
+        Debug.Log($"PawnPiece at {currentPos} possible moves: {possibleMoves.Count}");
         return possibleMoves;
     }
 
