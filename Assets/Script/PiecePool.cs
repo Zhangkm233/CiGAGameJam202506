@@ -5,44 +5,53 @@ using UnityEngine;
 
 public class PiecePool : MonoBehaviour
 {
-    //对象池
     private Queue<GameObject> _enemies = new();
 
-    public GameObject enemyPrefab; // 敌人预制体引用
-    public int initialPoolSize = 0; // 初始池大小
+    public GameObject enemyPrefab;
+    public int initialPoolSize = 0;
     public int maxPoolSize = 120;
-    public int minPoolSize = 5; // 最小池大小
+    public int minPoolSize = 5;
 
     private void Start() {
-        // 初始化敌人对象池
         for (int i = 0;i < initialPoolSize;i++) {
             CreateEnemy();
         }
     }
+
     private GameObject CreateEnemy() {
-        _enemies.Enqueue(Instantiate(enemyPrefab)); // 创建敌人并添加到池中
-        GameObject enemy = _enemies.Peek();
-        enemy.transform.SetParent(transform); // 设置父物体为当前对象池
-        enemy.SetActive(false); // 初始时将敌人设置为不可见
+        GameObject enemy = Instantiate(enemyPrefab);
+        enemy.transform.SetParent(transform);
+        enemy.SetActive(false);
+        _enemies.Enqueue(enemy);
         return enemy;
     }
 
     public GameObject GetEnemy() {
+        GameObject enemy;
         if (_enemies.Count > 0) {
-            GameObject enemy = _enemies.Dequeue(); // 从池中获取一个敌人
-            enemy.SetActive(true); // 将敌人设置为可见
-            return enemy;
-        } else if (_enemies.Count < maxPoolSize) {
-            return CreateEnemy(); // 如果池中没有敌人且未达到最大池大小，则创建新的敌人
+            enemy = _enemies.Dequeue();
+        } else if (_enemies.Count + transform.childCount < maxPoolSize) {
+            enemy = CreateEnemy();
+        } else {
+            return null;
         }
-        return null; // 如果池已满，返回null
+
+        // 关键：重置敌人状态
+        enemy.SetActive(true);
+        enemy.transform.SetParent(null); // 取出时解除父物体，或设置为棋盘父物体
+                                         // 你可以在这里重置动画、状态等
+        return enemy;
     }
 
-    // 返回敌人到池中
     public void ReturnEnemy(GameObject enemy) {
         if (enemy != null) {
-            enemy.SetActive(false); // 将敌人设置为不可见
-            _enemies.Enqueue(enemy); // 将敌人返回到池中
+            // 关键：彻底重置敌人状态
+            enemy.SetActive(false);
+            enemy.transform.SetParent(transform);
+            // 建议重置位置到池子外的某个安全点
+            enemy.transform.position = new Vector3(-9999,-9999,0);
+            // 你可以在这里重置动画、状态等
+            _enemies.Enqueue(enemy);
         }
     }
 }

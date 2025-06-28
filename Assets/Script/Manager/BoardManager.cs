@@ -40,7 +40,7 @@ public class BoardManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float obstacleAdditionRate = 0.1f;
     [Header("对象池")]
-    public PiecePool enemyPool; // 敌人池，用于存放生成的敌人预制体
+    //public PiecePool enemyPool; // 敌人池，用于存放生成的敌人预制体
     private Dictionary<Vector2Int, Piece> _pieceDict = new();
     // 棋盘上棋子的字典
     private List<Tile> _highlightedTiles = new(); // 高亮格子缓存
@@ -415,10 +415,12 @@ public class BoardManager : MonoBehaviour
             if (piece.Type == Piece.PieceType.Enemy)
             {
                 _enemyPieces.Remove(piece);
+                /*
                 if (IsPuttingBackToPool)
                 {
                     enemyPool.ReturnEnemy(piece.gameObject);
                 }
+                */
             }
             else
             {
@@ -721,7 +723,8 @@ public class BoardManager : MonoBehaviour
             int idx = Random.Range(0, edgePositions.Count);
             Vector2Int pos = edgePositions[idx];
             edgePositions.RemoveAt(idx);
-            GameObject enemyObj = enemyPool.GetEnemy();
+            /*GameObject enemyObj = enemyPool.GetEnemy();*/
+            GameObject enemyObj = Instantiate(enemyPrefab,GetWorldPosition(pos),Quaternion.identity,transform);
             enemyObj.transform.position = GetWorldPosition(pos);
             // 设置敌人位置
             Piece enemyPiece = enemyObj.GetComponent<Piece>();
