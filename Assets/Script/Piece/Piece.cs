@@ -90,25 +90,21 @@ public abstract class Piece : MonoBehaviour
 
     IEnumerator MovingAnimationCoroutine(Vector2Int startPosition, Vector2Int targetPosition)
     {
-        Tweener tweener = transform.DOMove(BoardManager.Instance.GetWorldPosition(targetPosition), 0.5f);
-        tweener.SetEase(Ease.OutExpo); // 设置动画缓动效果
+        // 防止旧的动画与新的动画发生冲突
+        transform.DOKill(true); // true表示也杀死子物体的Tween，以防Canvas等也有Tween
 
+        // 移动动画
+        Tweener moveTweener = transform.DOMove(BoardManager.Instance.GetWorldPosition(targetPosition), 0.5f);
+        moveTweener.SetEase(Ease.OutExpo); // 设置动画缓动效果
+
+        // 缩放动画
         Tweener ScaleTweener = transform.DOScale(1.6f, 0.25f).SetLoops(2, LoopType.Yoyo);
         ScaleTweener.SetEase(Ease.OutExpo); // 设置缩放动画缓动效果
-        yield return null;
-        // // 这里可以实现平滑移动的动画效果
-        // float elapsedTime = 0f;
-        // float duration = 0.5f; // 移动持续时间
-        // Vector3 startWorldPos = BoardManager.Instance.GetWorldPosition(startPosition);
-        // Vector3 targetWorldPos = BoardManager.Instance.GetWorldPosition(targetPosition);
 
-        // while (elapsedTime < duration)
-        // {
-        //     transform.position = Vector3.Lerp(startWorldPos, targetWorldPos, elapsedTime / duration);
-        //     elapsedTime += Time.deltaTime;
-        //     yield return null; // 等待下一帧
-        // }
-        // transform.position = targetWorldPos; // 确保最终位置正确
+        // 等待移动动画完成
+        yield return moveTweener.WaitForCompletion();
+        // 等待缩放动画完成
+        yield return ScaleTweener.WaitForCompletion();
     }
 
     // 处理棋子攻击另一个目标棋子的逻辑。此方法仅包含攻击动画/音效触发等，实际吃子和移除由BoardManager处理。
