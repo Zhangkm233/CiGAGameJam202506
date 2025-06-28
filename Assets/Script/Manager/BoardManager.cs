@@ -368,10 +368,28 @@ public class BoardManager : MonoBehaviour
         generalPiece.CurrentMovementCount = 0; // 将棋不可移动
         AddPiece(generalPiece, generalPos);
 
-        // 2. 生成两个初始卒棋，随机属性，随机空Tile
-        for (int i = 0; i < 2; i++)
+        // 2. 生成两个初始卒棋，在将棋的5x5范围内随机位置
+        List<Vector2Int> availablePositionsNearGeneral = GetAvailablePositionsNearGeneral(); // 使用您现有的方法
+
+
+        // 随机挑选两个独一无二的位置来生成卒
+        List<Vector2Int> selectedPawnPositions = new List<Vector2Int>();
+        while (selectedPawnPositions.Count < 2 && availablePositionsNearGeneral.Count > 0)
         {
-            SpawnRandomPiece();
+            int randomIndex = Random.Range(0, availablePositionsNearGeneral.Count);
+            Vector2Int pos = availablePositionsNearGeneral[randomIndex];
+
+            selectedPawnPositions.Add(pos);
+            availablePositionsNearGeneral.RemoveAt(randomIndex); // 移除已选位置，确保唯一性
+        }
+
+        foreach (Vector2Int pawnPos in selectedPawnPositions)
+        {
+            GameObject pawnObj = Instantiate(pawnPrefab, GetWorldPosition(pawnPos), Quaternion.identity, transform);
+            Piece pawnPiece = pawnObj.GetComponent<Piece>();
+            Personality pawnPersonality = GetRandomPersonality(); // 卒棋子可以有随机性格
+            pawnPiece.InitializePiece(pawnPersonality, pawnPos);
+            AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到 _friendlyPieces 列表并设置到棋盘上
         }
     }
 
@@ -652,6 +670,7 @@ public class BoardManager : MonoBehaviour
     private void ProcessNewPieceCountdown()
     {
         _newPieceCountdown--;
+
         if (_newPieceCountdown <= 0)
         {
             // 在将棋附近生成新棋子
@@ -659,10 +678,18 @@ public class BoardManager : MonoBehaviour
             if (nearPositions.Count > 0)
             {
                 int idx = Random.Range(0, nearPositions.Count);
-                Vector2Int pos = nearPositions[idx];
-                SpawnRandomPiece();
-            }
+                Vector2Int posToSpawn = nearPositions[idx]; 
 
+                // 随机选择棋子类型和性格
+                Piece.PieceType randomType = GetRandomPieceType();
+                GameObject prefab = GetPrefabForType(randomType);
+                Personality randomPersonality = GetRandomPersonality();
+
+                GameObject pieceObj = Instantiate(prefab, GetWorldPosition(posToSpawn), Quaternion.identity, transform);
+                Piece newPiece = pieceObj.GetComponent<Piece>();
+                newPiece.InitializePiece(randomPersonality, posToSpawn);
+                AddPiece(newPiece, posToSpawn);
+            }
             // 重置倒计时
             _totalNewPiecesGained++;
             _newPieceCountdown = _totalNewPiecesGained + 3;
