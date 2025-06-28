@@ -11,10 +11,10 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private int boardWidth = GameData.mapWidth;
     [SerializeField] private int boardHeight = GameData.mapHeight;
     [SerializeField] public Vector3 boardOrigin = Vector3.zero;
-    [SerializeField] private float cellSize = 0.85f;
-    public Vector3 tile_0_0;
-    public Vector3 tile_0_1;
-    public float Xoffset = 1f; // X轴偏移量
+    //[SerializeField] private float cellSize = 0.85f;
+    [Header("棋盘格子定位")]
+    public GameObject tile_0_0;
+    public float offset = 0.85f;
 
     [Header("棋子Prefab")]
     public GameObject generalPrefab;// 将棋预制体
@@ -59,6 +59,7 @@ public class BoardManager : MonoBehaviour
             Destroy(gameObject);
         }
         //GetComponent<TileGenerator>().GenTiles(); // 生成棋盘格子
+        offset = GameData.tileSize; // 设置格子大小
     }
 
     private void Update()
@@ -245,14 +246,14 @@ public class BoardManager : MonoBehaviour
 
     // 棋盘坐标转世界坐标
     public Vector3 GetWorldPosition(Vector2Int boardPos) {
-        return boardOrigin + new Vector3(boardPos.x * Xoffset,boardPos.y * Xoffset,0);
+        return tile_0_0.transform.position + new Vector3(boardPos.x * offset,boardPos.y * offset,0);
     }
 
     // 世界坐标转棋盘坐标
     public Vector2Int GetBoardPosition(Vector3 worldPos) {
-        Vector3 local = worldPos - boardOrigin;
-        int x = Mathf.RoundToInt(local.x / Xoffset);
-        int y = Mathf.RoundToInt(local.y / Xoffset);
+        Vector3 local = worldPos - tile_0_0.transform.position;
+        int x = Mathf.RoundToInt(local.x / offset);
+        int y = Mathf.RoundToInt(local.y / offset);
         return new Vector2Int(x,y);
     }
 
