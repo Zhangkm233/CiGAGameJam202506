@@ -1702,6 +1702,7 @@ MonoBehaviour:
   PersonalityGeneral: {fileID: 11400000, guid: c8061109436818e4581555c45140fab7, type: 2}
   pawnPersonalities:
   - {fileID: 11400000, guid: c8061109436818e4581555c45140fab7, type: 2}
+  enemyPool: {fileID: 1643986325}
 --- !u!1 &162682373
 GameObject:
   m_ObjectHideFlags: 0
@@ -15339,8 +15340,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1643986324}
+  - component: {fileID: 1643986325}
   m_Layer: 0
-  m_Name: PieceParent
+  m_Name: PiecePool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15361,6 +15363,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1643986325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643986323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23aeac148a0e834286d5660b6118727, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 6048917852243057827, guid: 0ac4cdfaf029b3840ad74348eb6dd72e, type: 3}
+  initialPoolSize: 5
+  maxPoolSize: 120
+  minPoolSize: 5
 --- !u!1 &1689263044
 GameObject:
   m_ObjectHideFlags: 0

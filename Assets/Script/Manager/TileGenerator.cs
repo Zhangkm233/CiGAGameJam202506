@@ -1,11 +1,11 @@
 using UnityEngine;
-
+using System;
 public class TileGenerator : MonoBehaviour
 {
     public GameObject tilePrefab; // 预制体引用
 
-    
 
+    [Obsolete("已经将tile添加到游戏中，无须再生成")]
     public void GenTiles()
     {
         for (int i = 0; i < GameData.mapHeight; i++)

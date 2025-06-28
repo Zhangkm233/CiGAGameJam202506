@@ -26,6 +26,9 @@ public class BoardManager : MonoBehaviour
     public Personality PersonalityGeneral;
     public List<Personality> pawnPersonalities;
 
+    [Header("对象池")]
+    public PiecePool enemyPool; // 敌人池，用于存放生成的敌人预制体
+
     private Dictionary<Vector2Int, Piece> _pieceDict = new(); // 棋盘上棋子的字典
     private List<Tile> _highlightedTiles = new(); // 高亮格子缓存
     private List<Piece> _friendlyPieces = new(); // 友方棋子列表
@@ -201,7 +204,7 @@ public class BoardManager : MonoBehaviour
     }
 
     // 从棋盘移除棋子
-    public void RemovePiece(Vector2Int pos)
+    public void RemovePiece(Vector2Int pos,bool IsPuttingBackToPool)
     {
         if (_pieceDict.TryGetValue(pos, out var piece))
         {
@@ -209,8 +212,10 @@ public class BoardManager : MonoBehaviour
             if (piece.Type == Piece.PieceType.Enemy)
             {
                 _enemyPieces.Remove(piece);
-            }
-            else
+                if (IsPuttingBackToPool) {
+                    enemyPool.ReturnEnemy(piece.gameObject); // 将敌人棋子放回对象池
+                }
+            } else
             {
                 _friendlyPieces.Remove(piece);
             }
@@ -222,6 +227,7 @@ public class BoardManager : MonoBehaviour
             _pieceDict.Remove(pos);
         }
     }
+
 
     // 获取指定位置的Tile
     public Tile GetTileAtPosition(Vector2Int pos)
@@ -298,7 +304,7 @@ public class BoardManager : MonoBehaviour
     {
         if (piece == null) return;
         Vector2Int oldPos = piece.BoardPosition;
-        RemovePiece(oldPos);
+        RemovePiece(oldPos,false);
 
         // 如果目标格有敌方棋子，先处理攻击
         Piece targetPiece = GetPieceAtPosition(targetPos);
@@ -311,7 +317,7 @@ public class BoardManager : MonoBehaviour
         AddPiece(piece, targetPos);
         piece.MovingAnimation(oldPos, targetPos); // 使用平滑移动动画
         piece.CurrentMovementCount --; // 减少移动次数
-        piece.transform.Find("PieceCanvas").Find("PieceMove").GetComponent<TMP_Text>().text = (piece.CurrentMovementCount).ToString();
+        UpdatePieceMove(piece); // 更新棋子移动次数显示
         //piece.transform.position = GetWorldPosition(targetPos);
     }
 
@@ -321,7 +327,7 @@ public class BoardManager : MonoBehaviour
         if (attacker == null || target == null) return;
         // 触发攻击逻辑
         target.StateMachine?.ChangeState(new PieceDeadState(target));
-        RemovePiece(target.BoardPosition);
+        RemovePiece(target.BoardPosition,true);
 
         // 检查是否攻击了将棋
         if (target.Type == Piece.PieceType.Pawn && IsGeneral(target)) // 假设将棋也是Pawn类型但有特殊标记
@@ -593,7 +599,8 @@ public class BoardManager : MonoBehaviour
             Vector2Int pos = edgePositions[idx];
             edgePositions.RemoveAt(idx);
 
-            GameObject enemyObj = Instantiate(enemyPrefab, GetWorldPosition(pos), Quaternion.identity, transform);
+            GameObject enemyObj = enemyPool.GetEnemy();
+            enemyObj.transform.position = GetWorldPosition(pos); // 设置敌人位置
             Piece enemyPiece = enemyObj.GetComponent<Piece>();
             enemyPiece.InitializePiece(null, pos); // 敌人不需要性格
             AddPiece(enemyPiece, pos);
