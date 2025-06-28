@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.97, y: 2.9536417, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.85, y: 0.85, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: -6007857137893288414, guid: 1557b01f36e8836469722b58a6d861ca, type: 3}
+  m_Sprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -127,7 +127,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.99085367, y: 0.99085367}
     newSize: {x: 2.56, y: 2.56}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -147,5 +147,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c935639d32593534ebf8a22b4a3d8647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highLightSprite: {fileID: 8725218637780951959, guid: 3c87af8ca218e484eac503d5d430d0d5, type: 3}
-  defaultSprite: {fileID: -6007857137893288414, guid: 1557b01f36e8836469722b58a6d861ca, type: 3}
+  highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
