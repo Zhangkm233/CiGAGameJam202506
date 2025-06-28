@@ -854,11 +854,13 @@ public class BoardManager : MonoBehaviour
             if (targetPiece == null)
             {
                 // 移动到空格
+                enemy.StateMachine?.ChangeState(new PieceMovingState(enemy, targetPos));
                 MovePiece(enemy, targetPos);
             }
             else if (targetPiece.Type != Piece.PieceType.Enemy)
             {
                 // 攻击友方棋子
+                enemy.StateMachine?.ChangeState(new PieceAttackingState(enemy, targetPiece, targetPos));
                 AttackPiece(enemy, targetPiece);
                 MovePiece(enemy, targetPos);
             }

@@ -32,6 +32,9 @@ public abstract class Piece : MonoBehaviour
     public delegate void OnMoodChanged(Piece piece, Mood oldMood, Mood newMood);
     public static event OnMoodChanged OnMoodChangedEvent; // 棋子心情改变时触发
 
+    public delegate void OnPieceAttackFinished(Piece attacker, Piece target);
+    public static event OnPieceAttackFinished OnPieceAttackFinishedEvent; // 落子时刻触发
+
     public virtual void Awake()
     {
         StateMachine = new PieceStateMachine(this); // 初始化棋子状态机
@@ -111,6 +114,7 @@ public abstract class Piece : MonoBehaviour
     public virtual void Attack(Piece targetPiece)
     {
         Debug.Log($"{Type} 在 {BoardPosition} 攻击了 {targetPiece.Type} 在 {targetPiece.BoardPosition}");
+        OnPieceAttackFinishedEvent?.Invoke(this, targetPiece); // 触发攻击完成事件
         // 播放攻击动画、音效等，实际的棋子移除和死亡状态设置由 BoardManager.AttackPiece 处理
     }
 
