@@ -31,20 +31,20 @@ public class PieceIdleState : PieceState
     private void PlayIdleAnimation()
     {
         Mood mood = _piece.CurrentMood; // 获取棋子的当前心情
-        
         // 根据棋子的心情播放不同的待机动画
-        if (mood.CurrentMoodLevel <= 33)
+        if (mood.CurrentMoodLevel <= 1)
         {
             // TODO: 掉眼泪
         }
-        else if (mood.CurrentMoodLevel <= 66)
+        else if (mood.CurrentMoodLevel <= 10)
         {
-            // 上下浮动
-            float offsetY = Mathf.Sin(Time.time * 3) * 0.05f; 
-            _piece.transform.position += new Vector3(0, offsetY, 0);
+            // 上下浮动 效果感觉不是很好，可以随意删改
+            //float offsetY = Mathf.Sin(Time.time * 3) * 0.001f;
+            //_piece.transform.position += new Vector3(0, offsetY, 0);
+            
         }
         else
-        {   
+        {
             // TODO: 上下跳跃
         }
         

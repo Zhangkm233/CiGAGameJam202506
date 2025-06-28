@@ -89,6 +89,7 @@ public abstract class Piece : MonoBehaviour
 
     IEnumerator MovingAnimationCoroutine(Vector2Int startPosition, Vector2Int targetPosition)
     {
+        
         // 这里可以实现平滑移动的动画效果
         float elapsedTime = 0f;
         float duration = 0.5f; // 移动持续时间
