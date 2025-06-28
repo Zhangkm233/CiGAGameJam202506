@@ -52,8 +52,8 @@ public class BoardManager : MonoBehaviour
     private List<Tile> _highlightedTiles = new(); // 高亮格子缓存
     private List<Piece> _friendlyPieces = new(); // 友方棋子列表
     private List<Piece> _enemyPieces = new(); // 敌人棋子列表
-    private List<Piece> _StunPieces = new(); // 晕眩棋子列表，用于处理人格给的不能移动状态
-    private List<Piece> _PacifismPieces = new(); // 和平主义棋子列表，用于处理人格给的不能攻击状态
+    public List<Piece> _StunPieces = new(); // 晕眩棋子列表，用于处理人格给的不能移动状态
+    public List<Piece> _PacifismPieces = new(); // 和平主义棋子列表，用于处理人格给的不能攻击状态
 
     // --- 图块缓存 ---
     private Dictionary<Vector2Int, Tile> _tileDict = new();
@@ -339,7 +339,6 @@ public class BoardManager : MonoBehaviour
         }
 
         Piece clickedPiece = GetPieceAtPosition(boardPos);
-
         if (_selectedPiece == null)
         {
             // 没有选中棋子，尝试选择点击的棋子
@@ -366,6 +365,7 @@ public class BoardManager : MonoBehaviour
             {
                 // 无效移动，重新选择
                 CancelSelection();
+                Debug.Log(boardPos + " 位置无效，无法移动 " + _selectedPiece.name);
                 if (clickedPiece != null && clickedPiece.Type != Piece.PieceType.Enemy && clickedPiece.CurrentMovementCount > 0)
                 {
                     SelectPiece(clickedPiece);
@@ -405,10 +405,19 @@ public class BoardManager : MonoBehaviour
     private void ExecuteMove(Piece piece, Vector2Int targetPos)
     {
         Piece targetPiece = GetPieceAtPosition(targetPos);
+        if (_StunPieces.Contains(piece)) {
+            // 如果棋子处于晕眩状态，不能移动
+            Debug.Log($"{piece.name} 处于晕眩状态，无法移动。");
+            return;
+        }
         if (targetPiece != null && targetPiece.Type != Piece.PieceType.Enemy) return;
         if (targetPiece != null)
         {
             // 攻击敌人
+            if (_PacifismPieces.Contains(piece)) {
+                Debug.Log($"{piece.name} 无法攻击。");
+                return;
+            }
             piece.StateMachine?.ChangeState(new PieceAttackingState(piece, targetPiece, targetPos));
         }
         else if (targetPiece == null)
@@ -510,6 +519,11 @@ public class BoardManager : MonoBehaviour
         return true;
     }
 
+    public bool IsObstacleBoardPosition(Vector2Int pos) {
+        Tile tile = GetTileAtPosition(pos);
+        return tile != null && tile.isObstacle;
+    }
+
     // 高亮显示可移动/攻击的位置
     public void HighlightMoves(List<Vector2Int> moves)
     {
@@ -547,7 +561,7 @@ public class BoardManager : MonoBehaviour
 
         // 如果目标格有敌方棋子，先处理攻击
         Piece targetPiece = GetPieceAtPosition(targetPos);
-        if (targetPiece != null && targetPiece.Type != piece.Type)
+        if (targetPiece != null && targetPiece.Type == Piece.PieceType.Enemy)
         {
             AttackPiece(piece, targetPiece);
         }
@@ -709,14 +723,14 @@ public class BoardManager : MonoBehaviour
         // 3. 敌人移动
         // StartCoroutine(EnemyTurnCoroutine());
 
-        _StunPieces.Clear(); // 清空晕眩棋子列表
-        _PacifismPieces.Clear(); // 清空和平主义棋子列表
     }
 
     // 结束玩家回合
     public void EndPlayerTurn()
     {
         StartCoroutine(EnemyTurnCoroutine());
+        _StunPieces.Clear(); // 清空晕眩棋子列表
+        _PacifismPieces.Clear(); // 清空和平主义棋子列表
     }
     public void UpdateEachPieceMove()
     {
