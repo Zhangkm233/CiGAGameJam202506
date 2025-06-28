@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u5352"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 24ecf6fe9bae612439dc8625e0ea7082, type: 2}
   m_sharedMaterial: {fileID: -7949831450216098846, guid: 24ecf6fe9bae612439dc8625e0ea7082, type: 2}
@@ -250,7 +250,6 @@ GameObject:
   - component: {fileID: 9061685279367806224}
   - component: {fileID: 80063893223198122}
   - component: {fileID: 6414178430686387898}
-  - component: {fileID: 8692395426246906084}
   m_Layer: 0
   m_Name: PiecePrefab
   m_TagString: Untagged
@@ -377,17 +376,3 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: -0.0021820068, y: 0}
   m_Radius: 0.38872433
---- !u!114 &8692395426246906084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8176771909976043857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85fa09e59b78330488877746f5be1a68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 0
-  _currentMovementCount: 0
