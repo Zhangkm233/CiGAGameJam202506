@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
     public Sprite obstacleSprite;  // 障碍物状态
 
     private SpriteRenderer spriteRenderer;
-
+    public Vector2Int BoardPosition { get; set; }
     private void Awake()
     {
         // 在开始时获取并缓存SpriteRenderer组件，提高性能
