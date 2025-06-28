@@ -25,10 +25,11 @@ public class GeneralPiece : Piece
                 // 将可以移动到空位或攻击敌人
                 if (targetPiece == null || targetPiece.Type == PieceType.Enemy)
                 {
-                    possibleMoves.Add(targetPos);
+                    //possibleMoves.Add(targetPos);
                 }
             }
         }
+
         return possibleMoves;
     }
 

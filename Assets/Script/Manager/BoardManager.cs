@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -309,6 +310,8 @@ public class BoardManager : MonoBehaviour
         // 移动棋子
         AddPiece(piece, targetPos);
         piece.MovingAnimation(oldPos, targetPos); // 使用平滑移动动画
+        piece.CurrentMovementCount --; // 减少移动次数
+        piece.transform.Find("PieceCanvas").Find("PieceMove").GetComponent<TMP_Text>().text = (piece.CurrentMovementCount).ToString();
         //piece.transform.position = GetWorldPosition(targetPos);
     }
 
@@ -493,9 +496,10 @@ public class BoardManager : MonoBehaviour
     public void StartNewTurn()
     {
         _currentTurn++;
-
         // 1. 敌人出现
         SpawnEnemies();
+        // 更新移动次数
+        UpdateEachPieceMove();
 
         // 2. 玩家回合（通过UI按钮触发结束）
 
@@ -507,6 +511,22 @@ public class BoardManager : MonoBehaviour
     public void EndPlayerTurn()
     {
         StartCoroutine(EnemyTurnCoroutine());
+    }
+    public void UpdateEachPieceMove() {
+        foreach (var piece in _friendlyPieces) {
+            if (piece != null) {
+                UpdatePieceMove(piece);
+            }
+        }
+        foreach (var piece in _enemyPieces) {
+            if (piece != null) {
+                UpdatePieceMove(piece);
+            }
+        }
+    }
+
+    public void UpdatePieceMove(Piece piece){
+        piece.transform.Find("PieceCanvas").Find("PieceMove").GetComponent<TMP_Text>().text = (piece.CurrentMovementCount).ToString();
     }
 
     // 敌人回合协程

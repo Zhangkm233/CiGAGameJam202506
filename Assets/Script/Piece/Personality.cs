@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-[CreateAssetMenu(fileName = "NewPersonality", menuName = "Game/Personality")]
+[ CreateAssetMenu(fileName = "NewPersonality", menuName = "Game/Personality")]
 public class Personality : ScriptableObject
 {
     public string PersonalityName; // ÐÔ¸ñÃû³Æ
