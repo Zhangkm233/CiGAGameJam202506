@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections; 
+using System.Collections.Generic;
+using DG.Tweening; // 引入DoTween命名空间
 
 public class GameManager : MonoBehaviour
 {
@@ -37,7 +38,6 @@ public class GameManager : MonoBehaviour
 
         // 初始化状态机
         StateMachine = new GameStateMachine();
-
         // 尝试自动获取BoardManager
         if (boardManager == null)
         {
@@ -54,13 +54,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     // UI按钮调用：开始新游戏
     public void StartGame()
     {
         StateMachine.ChangeState(new GamePlayState(this));
     }
-
 
     // 当“将”被击败时触发游戏结束
     public void TriggerGameOver()
@@ -68,16 +66,13 @@ public class GameManager : MonoBehaviour
         StateMachine.ChangeState(new GameOverState(this));
     }
 
-
     // UI按钮调用：返回主菜单
     public void ReturnToMainMenu()
     {
         StateMachine.ChangeState(new MainMenuState(this));
     }
 
-
     // UI按钮调用：显示团队介绍界面
-
     public void ShowTeamInfo()
     {
         if (teamInfoPanel != null)
@@ -123,35 +118,51 @@ public class GameManager : MonoBehaviour
         public override void OnEnter()
         {
             Debug.Log("进入状态：游戏进行中");
-            // 启动切换动画的协程
-            _manager.StartCoroutine(TransitionToGame());
+            TransitionToGame();
         }
 
-        private IEnumerator TransitionToGame()
+        // 修正为非协程方法，使用DoTween Sequence，并正确处理Animator动画
+        private void TransitionToGame()
         {
-            // 根据策划案，执行UI切换动画
+            Sequence sequence = DOTween.Sequence();
+            float animationDuration = 0.5f; // 假设UI动画持续时间为0.5秒，根据你的动画实际时长调整
+
             // 1. 主界面快速向下移出
             if (_manager.mainMenuAnimator != null)
             {
-                _manager.mainMenuAnimator.Play("MoveDown_Out"); // TODO:需要名为 "MoveDown_Out" 的动画片段
+                _manager.mainMenuAnimator.SetTrigger("MoveOut"); // 触发Animator的"MoveOut"动画
+                // 或者直接播放动画状态：_manager.mainMenuAnimator.Play("MoveDown_Out");
+                sequence.AppendInterval(animationDuration); // 等待动画播放完毕的时间
             }
-            // 等待动画播放完毕
-            yield return new WaitForSeconds(0.5f); // 等待动画时间，可调整
+            else
+            {
+                // 如果没有Animator，也需要一个等待时间，否则逻辑会立即执行
+                sequence.AppendInterval(animationDuration);
+            }
 
             // 2. 隐藏主界面，显示游戏界面
-            if (_manager.mainMenuPanel != null) _manager.mainMenuPanel.SetActive(false);
-            if (_manager.gamePanel != null) _manager.gamePanel.SetActive(true);
+            sequence.AppendCallback(() => {
+                if (_manager.mainMenuPanel != null) _manager.mainMenuPanel.SetActive(false);
+                if (_manager.gamePanel != null) _manager.gamePanel.SetActive(true);
+            });
 
             // 3. 游戏界面从下往上移入
             if (_manager.gamePanelAnimator != null)
             {
-                _manager.gamePanelAnimator.Play("MoveUp_In"); // TODO:需要名为 "MoveUp_In" 的动画片段
+                _manager.gamePanelAnimator.SetTrigger("MoveIn"); // 触发Animator的"MoveIn"动画
+                // 或者直接播放动画状态：_manager.gamePanelAnimator.Play("MoveUp_In");
+                sequence.AppendInterval(animationDuration); // 等待动画时间
             }
-            yield return new WaitForSeconds(0.5f); // 等待动画时间
+            else
+            {
+                sequence.AppendInterval(animationDuration);
+            }
 
-            // 4. 初始化棋盘
-            Debug.Log("初始化棋盘...");
-            _manager.boardManager.InitializeBoard();
+            sequence.OnComplete(() => {
+                // 4. 初始化棋盘
+                Debug.Log("初始化棋盘...");
+                _manager.boardManager.InitializeBoard();
+            });
         }
     }
 
@@ -164,28 +175,40 @@ public class GameManager : MonoBehaviour
         public override void OnEnter()
         {
             Debug.Log("进入状态：游戏结束");
-            _manager.StartCoroutine(TransitionToGameOver());
+            TransitionToGameOver();
         }
 
-        private IEnumerator TransitionToGameOver()
+        // 修正为非协程方法，使用DoTween Sequence，并正确处理Animator动画
+        private void TransitionToGameOver()
         {
-            // UI切换动画
+            Sequence sequence = DOTween.Sequence();
+            float animationDuration = 0.5f; // 假设UI动画持续时间为0.5秒，根据你的动画实际时长调整
+
             // 1. 游戏界面快速下降
             if (_manager.gamePanelAnimator != null)
             {
-                _manager.gamePanelAnimator.Play("MoveDown_Out");
+                _manager.gamePanelAnimator.SetTrigger("MoveOut"); // 触发Animator的"MoveOut"动画
+                sequence.AppendInterval(animationDuration);
             }
-            yield return new WaitForSeconds(0.5f);
+            else
+            {
+                sequence.AppendInterval(animationDuration);
+            }
 
-            // 2. 隐藏游戏界面，显示结束界面
-            if (_manager.gamePanel != null) _manager.gamePanel.SetActive(false);
-            if (_manager.gameOverPanel != null) _manager.gameOverPanel.SetActive(true);
+            sequence.AppendCallback(() => {
+                // 2. 隐藏游戏界面，显示结束界面
+                if (_manager.gamePanel != null) _manager.gamePanel.SetActive(false);
+                if (_manager.gameOverPanel != null) _manager.gameOverPanel.SetActive(true);
+            });
 
             // 3. 游戏结束界面快速上升
             if (_manager.gameOverAnimator != null)
             {
-                _manager.gameOverAnimator.Play("MoveUp_In");
+                _manager.gameOverAnimator.SetTrigger("MoveIn"); // 触发Animator的"MoveIn"动画
+                // 这里可以添加一个OnComplete回调，如果游戏结束后还需要执行其他逻辑
             }
+            // 目前不需要AppendInterval，因为这是序列的最后一个动画
+            // sequence.AppendInterval(animationDuration); // 后面还有其他逻辑需要等待
         }
     }
 

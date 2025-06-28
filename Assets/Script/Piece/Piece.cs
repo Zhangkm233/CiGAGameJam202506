@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
-using DG.Tweening;
+using DG.Tweening; // 引入DoTween命名空间
 
 public abstract class Piece : MonoBehaviour
 {
     // --- 棋子核心属性 ---
     public enum PieceType { Pawn, Cannon, Elephant, Horse, Rook, Enemy, General } // 枚举棋子类型
     public PieceType Type; // 当前棋子的具体类型
+
     [SerializeField] private int _currentMovementCount; // 当前回合剩余移动次数
     public int CurrentMovementCount
     {
@@ -85,29 +85,44 @@ public abstract class Piece : MonoBehaviour
         Debug.Log($"{Type} 内部位置更新到 {BoardPosition}");
     }
 
-    //棋子平滑移动的动画
+    // 棋子平滑移动的动画 (修正为先放大 -> 移动 -> 缩小，并优化流畅度)
     public void MovingAnimation(Vector2Int startPosition, Vector2Int targetPosition)
-    {
-        StartCoroutine(MovingAnimationCoroutine(startPosition, targetPosition));
-    }
-
-    IEnumerator MovingAnimationCoroutine(Vector2Int startPosition, Vector2Int targetPosition)
     {
         // 防止旧的动画与新的动画发生冲突
         transform.DOKill(true); // true表示也杀死子物体的Tween，以防Canvas等也有Tween
 
-        // 移动动画
-        Tweener moveTweener = transform.DOMove(BoardManager.Instance.GetWorldPosition(targetPosition), 0.5f);
-        moveTweener.SetEase(Ease.OutExpo); // 设置动画缓动效果
+        Sequence sequence = DOTween.Sequence();
 
-        // 缩放动画
-        Tweener ScaleTweener = transform.DOScale(1.6f, 0.25f).SetLoops(2, LoopType.Yoyo);
-        ScaleTweener.SetEase(Ease.OutExpo); // 设置缩放动画缓动效果
+        // 定义动画时长
+        float scaleTransitionDuration = 0.2f; // 缩放动画的时长
+        float totalMoveDuration = 0.6f;      // 整体移动动画的总时长 (可以根据需要调整，让缩放和移动融合得更好)
 
-        // 等待移动动画完成
-        yield return moveTweener.WaitForCompletion();
-        // 等待缩放动画完成
-        yield return ScaleTweener.WaitForCompletion();
+        // 1. 放大动画：在移动动画开始时并行播放，并快速完成
+        // 使用Insert方法，让scaleUpTweener从序列的0秒开始播放
+        Tweener scaleUpTweener = transform.DOScale(1.6f, scaleTransitionDuration)
+                                          .SetEase(Ease.OutSine); // 使用更平滑的Sine缓动
+
+        // 2. 移动动画：作为序列的主体，定义整体持续时间
+        Tweener moveTweener = transform.DOMove(BoardManager.Instance.GetWorldPosition(targetPosition), totalMoveDuration)
+                                       .SetEase(Ease.InOutSine); // 使用更平滑的Sine缓动
+
+        // 3. 缩小动画：在移动动画即将结束时并行播放，并在移动结束时完成
+        // 使用Insert方法，让scaleDownTweener在moveTweener即将结束时开始
+        Tweener scaleDownTweener = transform.DOScale(1.0f, scaleTransitionDuration)
+                                            .SetEase(Ease.OutSine); // 使用更平滑的Sine缓动
+
+        // 构建序列
+        sequence.Append(moveTweener); // 首先将移动动画添加到序列中，作为主线
+
+        // 将放大动画插入到序列的开始（时间0），与移动动画并行
+        sequence.Insert(0, scaleUpTweener);
+
+        // 将缩小动画插入到移动动画结束前开始，与移动动画的尾部并行
+        // 确保缩小动画在总移动时间结束时完成
+        sequence.Insert(totalMoveDuration - scaleTransitionDuration, scaleDownTweener);
+
+        // 可以在序列完成时添加一个回调，以确保在动画结束后执行任何清理或逻辑
+        // 例如：sequence.OnComplete(() => Debug.Log("移动动画完成！"));
     }
 
     // 处理棋子攻击另一个目标棋子的逻辑。此方法仅包含攻击动画/音效触发等，实际吃子和移除由BoardManager处理。
