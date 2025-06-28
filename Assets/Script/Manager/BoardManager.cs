@@ -551,17 +551,18 @@ public class BoardManager : MonoBehaviour
     private IEnumerator EnemyTurnCoroutine()
     {
         // 敌人移动
-        foreach (var enemy in _enemyPieces.ToArray()) 
+        foreach (var enemy in _enemyPieces.ToArray()) // 使用ToArray避免修改集合时的问题
         {
             if (enemy != null)
             {
-                // 直接调用移动逻辑立即启动每个敌人的动画协程
                 MoveEnemyTowardsGeneral(enemy);
+                // 关键修改：在这里添加每个敌人移动后的延迟，使其逐个移动
+                yield return new WaitForSeconds(0.2f); // 设置新的间隔速度为0.2秒
             }
         }
 
-
-        yield return new WaitForSeconds(0.5f); // 等待所有敌人动画完成的最长时间
+        // 之前为了实现同时移动而添加的统一等待动画完成的行，现在不需要了，请确保将其移除。
+        // yield return new WaitForSeconds(0.5f); // <-- 确保这一行已被删除或注释掉
 
         // 检查新棋子
         ProcessNewPieceCountdown();
