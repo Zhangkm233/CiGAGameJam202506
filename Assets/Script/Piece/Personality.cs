@@ -12,8 +12,8 @@ public class Personality : ScriptableObject
     [Tooltip("棋子的基础移动次数")]
     public int BaseMovementCount = 1;
     [Tooltip("棋子的初始心情等级")]
-    [Range(0, 100)]
-    public int InitialMoodLevel = 50;
+    [Range(0, 4)]
+    public int InitialMoodLevel = 2;
 
     // 存储不同心情区间对应的特质效果列表
     public List<MoodEffect> MoodEffects = new List<MoodEffect>();
@@ -24,9 +24,9 @@ public class Personality : ScriptableObject
     {
         public string EffectName; // 效果名称，“乐观增益？”
         [Tooltip("心情等级的下限 (包含)")]
-        [Range(0, 100)] public int MinMood; // 心情区间下限
+        [Range(0, 4)] public int MinMood; // 心情区间下限
         [Tooltip("心情等级的上限 (包含)")]
-        [Range(0, 100)] public int MaxMood; // 心情区间上限
+        [Range(0, 4)] public int MaxMood; // 心情区间上限
 
         [Header("回合开始时触发的效果")]
         public List<EffectData> OnTurnStartEffects; // 回合开始时应用的效果列表
@@ -49,6 +49,12 @@ public class Personality : ScriptableObject
     {
         IncreaseMovementCountOfSelf, // 增加自身移动次数
         IncreaseMovementCountOfAdjacentFriendlies, // 增加相邻友方棋子的移动次数
+        IncreaseSelectableRangeOf,   //自身的可选择的移动范围增加自身3x3范围
+        DestorySelf, // 销毁自身棋子
+        DecreaseMood, // 减少心情等级
+        IncreaseMood, // 增加心情等级
+        CantEatEnemy, // 无法吃掉敌人棋子
+        CantMove, // 无法移动
     }
 
     // 在棋子回合开始时，根据其当前心情等级应用相应的性格效果。
@@ -104,7 +110,32 @@ public class Personality : ScriptableObject
                 }
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使相邻友方增加 {data.Value} 移动次数。");
                 break;
-
+            case EffectType.DecreaseMood:
+                sourcePiece.CurrentMood.DecreaseMood(data.Value);
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 心情减少了 {data.Value}，当前心情等级: {sourcePiece.CurrentMood.CurrentMoodLevel}。");
+                break;
+            case EffectType.IncreaseMood:
+                sourcePiece.CurrentMood.IncreaseMood(data.Value);
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 心情增加了 {data.Value}，当前心情等级: {sourcePiece.CurrentMood.CurrentMoodLevel}。");
+                break;
+            case EffectType.DestorySelf:
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 销毁了自身棋子。");
+                BoardManager.Instance.RemovePiece(sourcePiece.BoardPosition,false); // 调用 BoardManager 的攻击方法销毁自身
+                break;
+            case EffectType.CantEatEnemy:
+                // TODO : 这里可以实现无法吃掉敌人棋子的逻辑
+                // 例如，设置一个标志位或状态，表示当前棋子不能攻击敌人
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 无法吃掉敌人棋子。");
+                break;
+            case EffectType.IncreaseSelectableRangeOf:
+                // TODO : 这里可以实现增加自身可选择范围的逻辑
+                // 例如，增加3x3范围内的可选位置
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 增加了 {data.Range} 的可选择范围。");
+                break;
+            case EffectType.CantMove:
+                sourcePiece.CurrentMood.DecreaseMood(99); // 设置棋子无法移动
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 无法移动。");
+                break;
         }
     }
 }

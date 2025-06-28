@@ -93,7 +93,34 @@ public class PieceInfoUI : MonoBehaviour
                 positiveEffectText.text = "悲观满足效果：无法吃掉敌人棋子";
                 negativeEffectText.text = "悲观痛苦效果：自身的可选择的移动范围增加自身3x3范围";
                 break;
-            // ... 在此添加其他性格的描述
+            case "外向":
+                positiveEffectText.text = "外向满足效果：在回合开始时，自身可移动次数+1";
+                negativeEffectText.text = "外向痛苦效果：无法移动";
+                break;
+            case "内向":
+                positiveEffectText.text = "内向满足效果：在回合开始时，相邻4格内的棋子的心情-1";
+                negativeEffectText.text = "内向痛苦效果：自身的可选择的移动范围增加自身3x3范围";
+                break;
+            case "完美主义":
+                positiveEffectText.text = "完美主义满足效果：在回合开始时，心情-3，全场的棋子可移动次数+1";
+                negativeEffectText.text = "完美主义痛苦效果：在回合开始时，消灭该棋子";
+                break;
+            case "务实":
+                positiveEffectText.text = "务实满足效果：在回合开始时，自身可移动次数+2";
+                negativeEffectText.text = "务实痛苦效果：在吃掉一个棋子后，心情+2";
+                break;
+            case "利他主义":
+                positiveEffectText.text = "利他主义满足效果：在回合开始时，使3x3的所有棋子心情+1";
+                negativeEffectText.text = "利他主义痛苦效果：在吃掉一个棋子后，自身可移动次数-1";
+                break;
+            case "淡然":
+                positiveEffectText.text = "淡然满足效果：无";
+                negativeEffectText.text = "淡然痛苦效果：在回合开始时，自身可移动次数-1";
+                break;
+                positiveEffectText.text = "利他主义满足效果：在回合开始时，使3x3的所有棋子心情+1";
+                negativeEffectText.text = "利他主义痛苦效果：在吃掉一个棋子后，自身可移动次数-1";
+                break;
+                // ... 在此添加其他性格的描述
 
         }
 

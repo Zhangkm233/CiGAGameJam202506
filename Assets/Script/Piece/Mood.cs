@@ -7,7 +7,7 @@ using System.Linq;
 public class Mood
 {
     private Piece _ownerPiece; // 拥有此心情的棋子实例
-    [Range(0, 10)] // 心情等级范围限制在0到10
+    [Range(0, 4)] // 心情等级范围限制在0到5
     [SerializeField] private int _currentMoodLevel; // 当前心情等级
 
     public int CurrentMoodLevel
@@ -16,7 +16,7 @@ public class Mood
         private set
         {
             int oldMood = _currentMoodLevel; // 记录旧的心情值
-            _currentMoodLevel = Mathf.Clamp(value, 0, 10); // 限制心情在有效范围内
+            _currentMoodLevel = Mathf.Clamp(value, 0, 4); // 限制心情在有效范围内
             if (oldMood != _currentMoodLevel) // 如果心情值实际发生了改变
             {
                 // 触发心情更新事件，通知外部监听者（UI等）
@@ -30,7 +30,7 @@ public class Mood
     public Mood(Piece owner)
     {
         _ownerPiece = owner;
-        _currentMoodLevel = 50; // 默认初始心情值
+        _currentMoodLevel = 2; // 默认初始心情值
     }
 
     // 构造函数重载，在事件中传递旧的心情值实例

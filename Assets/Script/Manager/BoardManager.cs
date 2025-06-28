@@ -52,6 +52,8 @@ public class BoardManager : MonoBehaviour
     private List<Tile> _highlightedTiles = new(); // 高亮格子缓存
     private List<Piece> _friendlyPieces = new(); // 友方棋子列表
     private List<Piece> _enemyPieces = new(); // 敌人棋子列表
+    private List<Piece> _StunPieces = new(); // 晕眩棋子列表，用于处理人格给的不能移动状态
+    private List<Piece> _PacifismPieces = new(); // 和平主义棋子列表，用于处理人格给的不能攻击状态
 
     // --- 图块缓存 ---
     private Dictionary<Vector2Int, Tile> _tileDict = new();
@@ -706,6 +708,9 @@ public class BoardManager : MonoBehaviour
 
         // 3. 敌人移动
         // StartCoroutine(EnemyTurnCoroutine());
+
+        _StunPieces.Clear(); // 清空晕眩棋子列表
+        _PacifismPieces.Clear(); // 清空和平主义棋子列表
     }
 
     // 结束玩家回合
