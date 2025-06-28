@@ -125,7 +125,6 @@ public class GameManager : MonoBehaviour
             Debug.Log("进入状态：游戏进行中");
             // 启动切换动画的协程
             _manager.StartCoroutine(TransitionToGame());
-            _manager.transform.GetComponent<TileGenerator>().GenTiles(); // 生成棋盘格子
         }
 
         private IEnumerator TransitionToGame()

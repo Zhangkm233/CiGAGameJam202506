@@ -153,8 +153,8 @@ public class BoardManager : MonoBehaviour
     private void ExecuteMove(Piece piece, Vector2Int targetPos)
     {
         Piece targetPiece = GetPieceAtPosition(targetPos);
-
-        if (targetPiece != null && targetPiece.Type == Piece.PieceType.Enemy)
+        if (targetPiece != null && targetPiece.Type != Piece.PieceType.Enemy) return;
+        if (targetPiece != null)
         {
             // 攻击敌人
             piece.StateMachine?.ChangeState(new PieceAttackingState(piece, targetPiece, targetPos));
@@ -164,7 +164,7 @@ public class BoardManager : MonoBehaviour
             // 移动到空格
             piece.StateMachine?.ChangeState(new PieceMovingState(piece, targetPos));
         }
-
+        // TODO： 需要更新棋子的移动次数
         // 更新棋子位置
         MovePiece(piece, targetPos);
     }
