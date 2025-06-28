@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq; // Added for .ToList() in CacheAllTiles
+using System.Linq; 
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -101,7 +101,6 @@ public class BoardManager : MonoBehaviour
                     // 将世界坐标转换为棋盘坐标作为字典的键
                     Vector2Int boardPos = GetBoardPosition(tile.transform.position);
                     _tileDict[boardPos] = tile;
-                    // !!! 新增：将棋盘坐标设置到 Tile 实例的 BoardPosition 属性上 !!!
                     tile.BoardPosition = boardPos;
                 }
             }
@@ -166,10 +165,10 @@ public class BoardManager : MonoBehaviour
             Piece pawnPiece = pawnObj.GetComponent<Piece>();
             Personality pawnPersonality = GetRandomPersonality(); // 卒棋子可以有随机性格
             pawnPiece.InitializePiece(pawnPersonality, pawnPos);
-            AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到 _friendlyPieces 列表并设置到棋盘上
+            AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到_friendlyPieces列表并设置到棋盘上
         }
     }
-    // --- 生成初始障碍物集合的方法 --- (此方法在 InitializeBoard 中不再被调用，但保留以防将来需要)
+    // --- 生成初始障碍物集合的方法 --- (此方法在 InitializeBoard 中不再被调用，但先保留)
     private void GenerateInitialObstacles()
     {
         // 清除所有先前的障碍物 (再次确保)
@@ -284,7 +283,6 @@ public class BoardManager : MonoBehaviour
             foreach (Tile candidateTile in shuffledNormalTiles)
             {
                 // 在放置之前，检查它是否会使棋盘断开
-                // !!! 修改：直接使用 Tile 对象的 BoardPosition 属性 !!!
                 if (IsBoardConnectedAfterPlacingObstacle(candidateTile.BoardPosition))
                 {
                     tileToSet = candidateTile;
@@ -316,10 +314,10 @@ public class BoardManager : MonoBehaviour
         if (proposedTile == null) return true;
 
         bool originalObstacleState = proposedTile.isObstacle;
-        // !!! 修改：使用 SetObstacle 方法而不是直接赋值 !!!
+        
         proposedTile.SetObstacle(true);
 
-        // 寻找 BFS/DFS 的起始点，该点不能是建议的障碍物位置且不是现有障碍物
+        // 寻找BFS/DFS的起始点，该点不能是建议的障碍物位置且不是现有障碍物
         Vector2Int startPos = Vector2Int.zero;
         bool startPosFound = false;
         foreach (var kvp in _tileDict)
@@ -332,15 +330,15 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        // 如果没有找到有效的起始点（例如，整个棋盘都变成了障碍物），则视为连通
+        // 如果没有找到有效的起始点则视为连通
         if (!startPosFound)
         {
-            // !!! 修改：使用 SetObstacle 方法而不是直接赋值 !!!
+            
             proposedTile.SetObstacle(originalObstacleState); // 恢复临时更改
             return true;
         }
 
-        // 执行 BFS 以计算可达的非障碍物图块数量
+        // 执行BFS以计算可达的非障碍物图块数量
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
         HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 
@@ -379,7 +377,6 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        // !!! 修改：使用 SetObstacle 方法而不是直接赋值 !!!
         proposedTile.SetObstacle(originalObstacleState); // 恢复临时更改
 
         // 如果访问到的图块数量等于总的非障碍物图块数量，则棋盘是连通的
@@ -879,11 +876,11 @@ public class BoardManager : MonoBehaviour
     {
         Vector2Int generalPos = GetGeneralPosition();
         Vector2Int enemyPos = enemy.BoardPosition;
-        // Debug log to check initial positions
+        
         Debug.Log($"Enemy {enemy.name} at {enemyPos} moving towards General at {generalPos} (Turn {_currentTurn})");
-        // List to store potential target positions and their distances to the general
+        
         List<(Vector2Int pos, float distance)> potentialMoves = new List<(Vector2Int pos, float distance)>();
-        // Define all 4 possible adjacent directions (仅上下左右)
+        // 仅上下左右
         Vector2Int[] directions = {
             new Vector2Int(0, 1),   // Up
             new Vector2Int(0, -1),  // Down
@@ -891,15 +888,15 @@ public class BoardManager : MonoBehaviour
             new Vector2Int(-1, 0)   // Left
             // 移除了斜向移动的方向向量
         };
-        // Evaluate each adjacent position
+        
         foreach (Vector2Int dir in directions)
         {
             Vector2Int candidatePos = enemyPos + dir;
-            // Check if the candidate position is within bounds and not an obstacle
+           
             if (IsValidBoardPosition(candidatePos))
             {
                 Piece pieceAtCandidatePos = GetPieceAtPosition(candidatePos);
-                // If the candidate position is empty or occupied by a friendly piece (target for attack)
+                
                 if (pieceAtCandidatePos == null || pieceAtCandidatePos.Type != Piece.PieceType.Enemy)
                 {
                     float dist = Vector2Int.Distance(candidatePos, generalPos);
@@ -907,30 +904,29 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-        // Sort potential moves by distance to the general (ascending)
+        
         potentialMoves.Sort((a, b) => a.distance.CompareTo(b.distance));
         Vector2Int chosenTargetPos = Vector2Int.zero;
         bool foundMove = false;
-        // Choose the best move: the one that minimizes the distance to the general
-        // If there are multiple moves with the same minimal distance, the first one (arbitrary) will be chosen due to sorting.
+        
         if (potentialMoves.Count > 0)
         {
             chosenTargetPos = potentialMoves[0].pos;
-            // The first element after sorting is the closest valid tile
+            
             foundMove = true;
         }
         if (foundMove)
         {
-            // Debug log the chosen target position
+            
             Debug.Log($"Enemy {enemy.name} from {enemyPos} calculated target position: {chosenTargetPos}. Distance to General: {Vector2Int.Distance(chosenTargetPos, generalPos)}");
-            // The MovePiece method already handles whether to move to an empty space or attack a piece at the target position.
+            
             MovePiece(enemy, chosenTargetPos);
-            return true; // Successfully moved or attacked
+            return true; 
         }
         else
         {
             Debug.Log($"Enemy {enemy.name} at {enemyPos}: No valid move found towards General.");
-            return false; // No valid move found
+            return false; 
         }
     }
     // 处理新棋子倒计时

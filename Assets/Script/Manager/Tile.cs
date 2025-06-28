@@ -56,7 +56,7 @@ public class Tile : MonoBehaviour
     {
         if (spriteRenderer != null)
         {
-            // 如果是障碍物，则恢复为障碍物，否则恢复为普通默认精灵
+            // 如果是障碍物，则恢复为障碍物，否则恢复为普通默认
             spriteRenderer.sprite = isObstacle ? obstacleSprite : defaultSprite;
         }
     }
