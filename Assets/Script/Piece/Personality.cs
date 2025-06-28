@@ -98,10 +98,12 @@ public class Personality : ScriptableObject
         switch (data.Type)
         {
             case EffectType.IncreaseMovementCountOfSelf:
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 增加自身 {data.Value} 移动次数。");
                 sourcePiece.CurrentMovementCount += data.Value;
                 Debug.Log($"{sourcePiece.Type} 因 {PersonalityName} (心情: {sourcePiece.CurrentMood.CurrentMoodLevel}) 增加自身 {data.Value} 移动次数。");
                 break;
             case EffectType.IncreaseMovementCountOfAdjacentFriendlies:
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 增加相邻友方棋子 {data.Value} 移动次数。");
                 List<Piece> adjacentFriendlies = BoardManager.Instance.GetAdjacentPieces(sourcePiece.BoardPosition)
                                                                      .Where(p => p.Type != Piece.PieceType.Enemy)
                                                                      .ToList();
@@ -113,6 +115,7 @@ public class Personality : ScriptableObject
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使相邻友方增加 {data.Value} 移动次数。");
                 break;
             case EffectType.IncreaseMovementCountOfAllFriendlies:
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 增加所有友方棋子 {data.Value} 移动次数。");
                 List<Piece> allFriendlies = BoardManager.Instance.GetFriendlyPieces();
                 foreach (var friendly in allFriendlies) {
                     friendly.CurrentMovementCount += data.Value;
@@ -121,6 +124,7 @@ public class Personality : ScriptableObject
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使所有友方增加 {data.Value} 移动次数。");
                 break;
             case EffectType.IncreaseMoodOfFriendliesInRange:
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 增加范围内友方棋子 {data.Value} 心情。");
                 List<Piece> friendliesInRange = BoardManager.Instance.GetPiecesInRange(sourcePiece.BoardPosition,data.Range)
                                                                      .Where(p => p.Type != Piece.PieceType.Enemy)
                                                                      .ToList();
@@ -131,10 +135,12 @@ public class Personality : ScriptableObject
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使范围内友方增加 {data.Value} 心情。");
                 break;
             case EffectType.DecreaseMood:
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 心情减少了 {data.Value}。");
                 sourcePiece.CurrentMood.DecreaseMood(data.Value);
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 心情减少了 {data.Value}，当前心情等级: {sourcePiece.CurrentMood.CurrentMoodLevel}。");
                 break;
             case EffectType.IncreaseMood:
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 心情增加了 {data.Value}。");
                 sourcePiece.CurrentMood.IncreaseMood(data.Value);
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 心情增加了 {data.Value}，当前心情等级: {sourcePiece.CurrentMood.CurrentMoodLevel}。");
                 break;
