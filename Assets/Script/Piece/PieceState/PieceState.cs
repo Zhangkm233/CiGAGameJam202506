@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 抽象基类，定义了所有棋子状态的通用接口。
+// 抽象基类，定义了所有棋子状态的通用接口
 public abstract class PieceState
 {
     protected Piece _piece; // 对拥有此状态的棋子实例的引用

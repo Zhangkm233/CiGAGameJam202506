@@ -1,43 +1,42 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PawnPiece : Piece
 {
-
-    public override List<Vector2Int> GetPossibleMoves(/*TODO:需要BoardManager类型参数*/ object boardManager)
+    public override List<Vector2Int> GetPossibleMoves()
     {
         List<Vector2Int> possibleMoves = new List<Vector2Int>();
-        Vector2Int currentPos = BoardPosition;
+        Vector2Int forward = new Vector2Int(0, 1); // 卒向前移动
 
-        // 定义4个方向的增量：上、下、左、右
-        Vector2Int[] directions = new Vector2Int[]
+        // 简单的向前移动
+        Vector2Int targetPos = BoardPosition + forward;
+        if (BoardManager.Instance.IsValidBoardPosition(targetPos) && BoardManager.Instance.GetPieceAtPosition(targetPos) == null)
         {
-            new Vector2Int(0, 1), new Vector2Int(0, -1), // 上下
-            new Vector2Int(1, 0), new Vector2Int(-1, 0)  // 左右
-        };
-
-        foreach (Vector2Int dir in directions)
-        {
-            Vector2Int nextPos = currentPos + dir; // 每次只移动一格
-
-            // if (actualBoardManager.IsValidBoardPosition(nextPos)) // 检查是否在棋盘内
-            // {
-            //     Piece targetPiece = actualBoardManager.GetPieceAtPosition(nextPos);
-            //     // 目标位置为空，或者目标是敌方棋子
-            //     if (targetPiece == null || targetPiece.Type != Type) 
-            //     {
-            //         possibleMoves.Add(nextPos);
-            //     }
-            // }
+            possibleMoves.Add(targetPos);
         }
-        Debug.Log($"PawnPiece at {currentPos} possible moves: {possibleMoves.Count}");
+
+        // 简单的斜线攻击（卒的进化的一种实现想法，不需要可以删去）
+        Vector2Int attackLeft = new Vector2Int(-1, 1);
+        Vector2Int attackRight = new Vector2Int(1, 1);
+
+        Piece targetPieceLeft = BoardManager.Instance.GetPieceAtPosition(BoardPosition + attackLeft);
+        if (BoardManager.Instance.IsValidBoardPosition(BoardPosition + attackLeft) && targetPieceLeft != null && targetPieceLeft.Type == PieceType.Enemy)
+        {
+            possibleMoves.Add(BoardPosition + attackLeft);
+        }
+
+        Piece targetPieceRight = BoardManager.Instance.GetPieceAtPosition(BoardPosition + attackRight);
+        if (BoardManager.Instance.IsValidBoardPosition(BoardPosition + attackRight) && targetPieceRight != null && targetPieceRight.Type == PieceType.Enemy)
+        {
+            possibleMoves.Add(BoardPosition + attackRight);
+        }
+
         return possibleMoves;
     }
 
-    public override bool IsValidMove(Vector2Int targetPosition, /*TODO:需要BoardManager类型参数*/ object boardManager)
+    public override bool IsValidMove(Vector2Int targetPosition)
     {
-        // 检查目标位置是否在GetPossibleMoves返回的列表中
-        List<Vector2Int> possibleMoves = GetPossibleMoves(boardManager);
-        return possibleMoves.Contains(targetPosition);
+        // 检查目标在可能的移动范围内
+        return GetPossibleMoves().Contains(targetPosition);
     }
 }

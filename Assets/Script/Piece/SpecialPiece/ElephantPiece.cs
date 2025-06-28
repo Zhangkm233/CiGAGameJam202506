@@ -1,45 +1,41 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ElephantPiece : Piece
 {
-
-    public override List<Vector2Int> GetPossibleMoves(/*TODO:需要BoardManager类型参数*/ object boardManager)
+    public override List<Vector2Int> GetPossibleMoves()
     {
         List<Vector2Int> possibleMoves = new List<Vector2Int>();
-        Vector2Int currentPos = BoardPosition;
-
-        // 象的四个斜线落点 (2格远)
-        Vector2Int[] possibleOffsets = new Vector2Int[]
+        Vector2Int[] offsets =
         {
             new Vector2Int(2, 2), new Vector2Int(2, -2),
             new Vector2Int(-2, 2), new Vector2Int(-2, -2)
         };
 
-        foreach (Vector2Int offset in possibleOffsets)
+        foreach (Vector2Int offset in offsets)
         {
-            Vector2Int targetPos = currentPos + offset;
-            Vector2Int eyePos = currentPos + offset / 2; // 象眼位置
+            Vector2Int targetPos = BoardPosition + offset;
+            // 象眼位置
+            Vector2Int eyePos = BoardPosition + new Vector2Int(offset.x / 2, offset.y / 2);
 
-            // if (actualBoardManager.IsValidBoardPosition(targetPos) && !actualBoardManager.IsAcrossRiver(targetPos, Type)) // 检查是否在棋盘内且不过河
-            // {
-            //     // 检查是否蹩象腿
-            //     if (actualBoardManager.GetPieceAtPosition(eyePos) == null)
-            //     {
-            //         Piece targetPiece = actualBoardManager.GetPieceAtPosition(targetPos);
-            //         if (targetPiece == null || targetPiece.Type != Type) // 如果目标为空或敌方棋子
-            //         {
-            //             possibleMoves.Add(targetPos);
-            //         }
-            //     }
-            // }
+            if (BoardManager.Instance.IsValidBoardPosition(targetPos))
+            {
+                // 检查是否蹩象眼
+                if (BoardManager.Instance.GetPieceAtPosition(eyePos) == null)
+                {
+                    Piece targetPiece = BoardManager.Instance.GetPieceAtPosition(targetPos);
+                    if (targetPiece == null || targetPiece.Type != Type) // 如果目标为空或敌方棋子
+                    {
+                        possibleMoves.Add(targetPos);
+                    }
+                }
+            }
         }
         return possibleMoves;
     }
 
-    public override bool IsValidMove(Vector2Int targetPosition, /*TODO:需要BoardManager类型参数*/ object boardManager)
+    public override bool IsValidMove(Vector2Int targetPosition)
     {
-        List<Vector2Int> possibleMoves = GetPossibleMoves(boardManager);
-        return possibleMoves.Contains(targetPosition);
+        return GetPossibleMoves().Contains(targetPosition);
     }
 }
