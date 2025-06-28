@@ -49,6 +49,8 @@ public class Personality : ScriptableObject
     {
         IncreaseMovementCountOfSelf, // 增加自身移动次数
         IncreaseMovementCountOfAdjacentFriendlies, // 增加相邻友方棋子的移动次数
+        IncreaseMovementCountOfAllFriendlies, // 增加所有友方棋子的移动次数
+        IncreaseMoodOfFriendliesInRange, // 增加范围内友方棋子的心情等级
         IncreaseSelectableRangeOf,   //自身的可选择的移动范围增加自身3x3范围
         DestorySelf, // 销毁自身棋子
         DecreaseMood, // 减少心情等级
@@ -110,6 +112,24 @@ public class Personality : ScriptableObject
                 }
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使相邻友方增加 {data.Value} 移动次数。");
                 break;
+            case EffectType.IncreaseMovementCountOfAllFriendlies:
+                List<Piece> allFriendlies = BoardManager.Instance.GetFriendlyPieces();
+                foreach (var friendly in allFriendlies) {
+                    friendly.CurrentMovementCount += data.Value;
+                    Debug.Log($"{friendly.Type} (友方) 因 {PersonalityName} 增加了 {data.Value} 移动次数。");
+                }
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使所有友方增加 {data.Value} 移动次数。");
+                break;
+            case EffectType.IncreaseMoodOfFriendliesInRange:
+                List<Piece> friendliesInRange = BoardManager.Instance.GetPiecesInRange(sourcePiece.BoardPosition,data.Range)
+                                                                     .Where(p => p.Type != Piece.PieceType.Enemy)
+                                                                     .ToList();
+                foreach (var friendly in friendliesInRange) {
+                    friendly.CurrentMood.IncreaseMood(data.Value);
+                    Debug.Log($"{friendly.Type} (友方) 因 {PersonalityName} 增加了 {data.Value} 心情。");
+                }
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使范围内友方增加 {data.Value} 心情。");
+                break;
             case EffectType.DecreaseMood:
                 sourcePiece.CurrentMood.DecreaseMood(data.Value);
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 心情减少了 {data.Value}，当前心情等级: {sourcePiece.CurrentMood.CurrentMoodLevel}。");
@@ -123,8 +143,7 @@ public class Personality : ScriptableObject
                 BoardManager.Instance.RemovePiece(sourcePiece.BoardPosition,false); // 调用 BoardManager 的攻击方法销毁自身
                 break;
             case EffectType.CantEatEnemy:
-                // TODO : 这里可以实现无法吃掉敌人棋子的逻辑
-                // 例如，设置一个标志位或状态，表示当前棋子不能攻击敌人
+                BoardManager.Instance._PacifismPieces.Add(sourcePiece);
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 无法吃掉敌人棋子。");
                 break;
             case EffectType.IncreaseSelectableRangeOf:
@@ -133,7 +152,7 @@ public class Personality : ScriptableObject
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 增加了 {data.Range} 的可选择范围。");
                 break;
             case EffectType.CantMove:
-                sourcePiece.CurrentMood.DecreaseMood(99); // 设置棋子无法移动
+                BoardManager.Instance._StunPieces.Add(sourcePiece);
                 Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 无法移动。");
                 break;
         }

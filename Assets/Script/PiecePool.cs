@@ -13,7 +13,7 @@ public class PiecePool : MonoBehaviour
     public int maxPoolSize = 120;
     public int minPoolSize = 5; // 最小池大小
 
-    private void Awake() {
+    private void Start() {
         // 初始化敌人对象池
         for (int i = 0;i < initialPoolSize;i++) {
             CreateEnemy();
@@ -37,6 +37,7 @@ public class PiecePool : MonoBehaviour
         }
         return null; // 如果池已满，返回null
     }
+
     // 返回敌人到池中
     public void ReturnEnemy(GameObject enemy) {
         if (enemy != null) {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class CannonPiece : Piece
 {
@@ -32,10 +33,9 @@ public class CannonPiece : Piece
             for (int i = 1; ; i++)
             {
                 Vector2Int currentCheckPos = BoardPosition + dir * i;
-                if (!BoardManager.Instance.IsValidBoardPosition(currentCheckPos)) break;
-
+                if (!BoardManager.Instance.IsInBounds(currentCheckPos)) break;
                 Piece pieceAtCheck = BoardManager.Instance.GetPieceAtPosition(currentCheckPos);
-                if (pieceAtCheck != null)
+                if (pieceAtCheck != null || BoardManager.Instance.IsObstacleBoardPosition(currentCheckPos))
                 {
                     if (!foundScreen)
                     {
@@ -43,7 +43,11 @@ public class CannonPiece : Piece
                     }
                     else // 在炮架之后找到第二个棋子
                     {
-                        if (pieceAtCheck.Type != Type) // 如果是敌人，则是有效的攻击目标
+                        if (pieceAtCheck == null) 
+                        {
+                            break;// 如果是障碍物，则不能攻击
+                        }
+                        if (pieceAtCheck.Type == PieceType.Enemy) // 如果是敌人，则是有效的攻击目标
                         {
                             possibleMoves.Add(currentCheckPos);
                         }

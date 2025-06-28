@@ -167,6 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &4089183
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -316,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &27313519
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -465,6 +467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &30135743
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -614,6 +617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &30591601
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -763,6 +767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &59201821
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -912,6 +917,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &62282139
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1061,6 +1067,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &65540414
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1297,6 +1304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &108776878
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1446,6 +1454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &110225577
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1595,6 +1604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &156172794
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1790,6 +1800,10 @@ MonoBehaviour:
   PersonalityGeneral: {fileID: 11400000, guid: c8061109436818e4581555c45140fab7, type: 2}
   pawnPersonalities:
   - {fileID: 11400000, guid: c8061109436818e4581555c45140fab7, type: 2}
+  obstacleRefreshChancePerTurn: 0.5
+  initialObstacleCount: 12
+  obstacleRemovalRate: 0.2
+  obstacleAdditionRate: 0.1
   enemyPool: {fileID: 1643986325}
 --- !u!1 &179845274
 GameObject:
@@ -1839,6 +1853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &179845277
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1988,6 +2003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &183195027
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2137,6 +2153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &197619987
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2286,6 +2303,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &198324981
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2435,6 +2453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &201111848
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2584,6 +2603,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &222197452
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2733,6 +2753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &244223542
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2882,6 +2903,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &246849202
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3167,6 +3189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &262522115
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3316,6 +3339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &293368331
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3465,6 +3489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &309948718
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3614,6 +3639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &342432676
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3763,6 +3789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &349508968
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3912,6 +3939,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &390712728
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4061,6 +4089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &394212478
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4210,6 +4239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &396681594
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4359,6 +4389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &401757649
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4508,6 +4539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &421636723
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4657,6 +4689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &425213751
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5003,6 +5036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &466315719
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5152,6 +5186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &474432631
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5438,6 +5473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &552049987
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5750,6 +5786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &624416950
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5899,6 +5936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &627818390
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6048,6 +6086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &634659430
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6197,6 +6236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &637104108
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6346,6 +6386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &648202880
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6628,6 +6669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &677030004
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6777,6 +6819,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &677556145
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6926,6 +6969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &696098503
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7075,6 +7119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &702379243
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7224,6 +7269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &708040506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7373,6 +7419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &710795588
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7522,6 +7569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &725738977
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7671,6 +7719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &729983466
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7820,6 +7869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &740285143
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7969,6 +8019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &755225661
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8118,6 +8169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &767984941
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8267,6 +8319,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &774617031
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8661,6 +8714,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &834474637
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8810,6 +8864,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &849720336
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8959,6 +9014,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &853185258
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9199,6 +9255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &863675603
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9348,6 +9405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &906586608
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9497,6 +9555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &910175055
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9646,6 +9705,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &943522859
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9795,6 +9855,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &948237801
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9944,6 +10005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &961210993
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10093,6 +10155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &964017101
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10242,6 +10305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &978561839
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10391,6 +10455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &984078819
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10540,6 +10605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1024893518
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10689,6 +10755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1027932745
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10838,6 +10905,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1032392841
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11074,6 +11142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1085191010
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11223,6 +11292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1127942681
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11372,6 +11442,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1166099524
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11521,6 +11592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1173602340
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11670,6 +11742,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1212761396
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11819,6 +11892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1213493657
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11968,6 +12042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1262019275
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12117,6 +12192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1262510052
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12266,6 +12342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1269046124
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12415,6 +12492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1277960782
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12564,6 +12642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1286635831
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12713,6 +12792,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1294554898
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12862,6 +12942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1313555314
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13011,6 +13092,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1320086589
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13160,6 +13242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1347419935
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13309,6 +13392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1385571411
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13458,6 +13542,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1409702772
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13607,6 +13692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1422261206
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13756,6 +13842,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1423225406
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13905,6 +13992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1423609691
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14054,6 +14142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1446380804
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14203,6 +14292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1450876841
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14352,6 +14442,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1456848703
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14501,6 +14592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1460176288
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14650,6 +14742,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1478402499
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14799,6 +14892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1496894668
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14948,6 +15042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1507365534
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15097,6 +15192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1538325058
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15246,6 +15342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1595561324
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15395,6 +15492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1610199022
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15544,6 +15642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1613467742
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15690,7 +15789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 6048917852243057827, guid: 0ac4cdfaf029b3840ad74348eb6dd72e, type: 3}
-  initialPoolSize: 5
+  initialPoolSize: 0
   maxPoolSize: 120
   minPoolSize: 5
 --- !u!1 &1662609171
@@ -15741,6 +15840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1662609174
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15890,6 +15990,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1663589943
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16039,6 +16140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1680406347
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16188,6 +16290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1688261907
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16337,6 +16440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1698309101
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16486,6 +16590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1745472057
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16635,6 +16740,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1793180422
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16784,6 +16890,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1804965075
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16933,6 +17040,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1806387436
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17082,6 +17190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1812150130
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17231,6 +17340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1827430007
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17380,6 +17490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1850951359
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17529,6 +17640,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1860795363
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18058,6 +18170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1899999041
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18207,6 +18320,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1904573950
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18356,6 +18470,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1904890943
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18505,6 +18620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &1974602691
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18757,6 +18873,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2001700218
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18906,6 +19023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2016784980
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19055,6 +19173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2019070102
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19340,6 +19459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2037207615
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19489,6 +19609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2050145691
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19638,6 +19759,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2067938755
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19787,6 +19909,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2122421217
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19936,6 +20059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2126680538
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20085,6 +20209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highLightSprite: {fileID: -4046209591323740840, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
   defaultSprite: {fileID: -5282682240610236376, guid: d684f431946b90e4b939bbc60aede8c0, type: 3}
+  obstacleSprite: {fileID: 0}
 --- !u!61 &2142172005
 BoxCollider2D:
   m_ObjectHideFlags: 0
