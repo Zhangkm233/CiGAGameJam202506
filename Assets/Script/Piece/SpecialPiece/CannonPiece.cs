@@ -50,10 +50,6 @@ public class CannonPiece : Piece
                         break; // 不能穿过两个棋子攻击
                     }
                 }
-                else if (foundScreen) // 如果找到炮架，现在没有棋子，不能再攻击
-                {
-                    break;
-                }
             }
         }
         return possibleMoves;
