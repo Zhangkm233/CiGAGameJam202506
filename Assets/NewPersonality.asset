@@ -16,13 +16,4 @@ MonoBehaviour:
   Description: 123123
   BaseMovementCount: 1
   InitialMoodLevel: 50
-  MoodEffects:
-  - EffectName: AA
-    MinMood: 0
-    MaxMood: 100
-    OnTurnStartEffects:
-    - Type: 0
-      Value: 1
-      Range: 0
-      TargetType: 0
-    OnTurnEndEffects: []
+  MoodEffects: []
