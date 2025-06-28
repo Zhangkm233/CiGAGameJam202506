@@ -744,9 +744,16 @@ public class BoardManager : MonoBehaviour
         {
             if (enemy != null)
             {
-                MoveEnemyTowardsGeneral(enemy);
+                if (MoveEnemyTowardsGeneral(enemy))
+                {
+                    yield return new WaitForSeconds(0.2f); // 设置新的间隔速度为0.2秒
+                }
+                else
+                {
+                    yield return null; //不再等待，直接进行下一个移动
+                }
 
-                yield return new WaitForSeconds(0.2f); // 设置新的间隔速度为0.2秒
+                
             }
         }
 
@@ -825,7 +832,7 @@ public class BoardManager : MonoBehaviour
     }
 
     // 移动敌人朝向将棋
-    private void MoveEnemyTowardsGeneral(Piece enemy)
+    private bool MoveEnemyTowardsGeneral(Piece enemy)
     {
         Vector2Int generalPos = GetGeneralPosition();
         Vector2Int enemyPos = enemy.BoardPosition;
@@ -855,6 +862,11 @@ public class BoardManager : MonoBehaviour
                 AttackPiece(enemy, targetPiece);
                 MovePiece(enemy, targetPos);
             }
+            return true; //可以移动
+        }
+        else
+        {
+            return false; //无法移动
         }
     }
 
