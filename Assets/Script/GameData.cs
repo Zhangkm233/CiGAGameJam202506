@@ -5,6 +5,7 @@ public static class GameData
     // 棋盘尺寸
     public const int mapWidth = 11;
     public const int mapHeight = 11;
+    public const float tileSize = 0.85f; // 每个格子的大小
 
     // 游戏平衡参数
     public const int initialNewPieceCountdown = 3;

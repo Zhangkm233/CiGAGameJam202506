@@ -28,7 +28,8 @@ public class PawnPiece : Piece
         // 简单的斜线攻击（卒的进化的一种实现想法，不需要可以删去）
         Vector2Int attackLeft = new Vector2Int(-1, 1);
         Vector2Int attackRight = new Vector2Int(1, 1);
-
+        Vector2Int attackRightDown = new Vector2Int(1, -1);
+        Vector2Int attackLeftDown = new Vector2Int(-1, -1);
         Piece targetPieceLeft = BoardManager.Instance.GetPieceAtPosition(BoardPosition + attackLeft);
         if (BoardManager.Instance.IsValidBoardPosition(BoardPosition + attackLeft) && targetPieceLeft != null && targetPieceLeft.Type == PieceType.Enemy)
         {
@@ -39,6 +40,14 @@ public class PawnPiece : Piece
         if (BoardManager.Instance.IsValidBoardPosition(BoardPosition + attackRight) && targetPieceRight != null && targetPieceRight.Type == PieceType.Enemy)
         {
             possibleMoves.Add(BoardPosition + attackRight);
+        }
+        Piece targetPieceRightDown = BoardManager.Instance.GetPieceAtPosition(BoardPosition + attackRightDown);
+        if (BoardManager.Instance.IsValidBoardPosition(BoardPosition + attackRightDown) && targetPieceRightDown != null && targetPieceRightDown.Type == PieceType.Enemy) {
+            possibleMoves.Add(BoardPosition + attackRightDown);
+        }
+        Piece targetPieceLeftDown = BoardManager.Instance.GetPieceAtPosition(BoardPosition + attackLeftDown);
+        if (BoardManager.Instance.IsValidBoardPosition(BoardPosition + attackLeftDown) && targetPieceLeftDown != null && targetPieceLeftDown.Type == PieceType.Enemy) {
+            possibleMoves.Add(BoardPosition + attackLeftDown);
         }
 
         return possibleMoves;
