@@ -25,7 +25,7 @@ public class GeneralPiece : Piece
                 // 将可以移动到空位或攻击敌人
                 if (targetPiece == null || targetPiece.Type == PieceType.Enemy)
                 {
-                    //possibleMoves.Add(targetPos);
+                    possibleMoves.Add(targetPos);
                 }
             }
         }
@@ -38,6 +38,6 @@ public class GeneralPiece : Piece
         // 将棋应该是不可移动的
         // 如果后续有可移动需求：return GetPossibleMoves().Contains(targetPosition);
         // 不过目前BoardManager将GeneralPiece的CurrentMovementCount设置为0，此方法在移动时实际上不会被调用
-        return false;
+        return GetPossibleMoves().Contains(targetPosition);
     }
 }
