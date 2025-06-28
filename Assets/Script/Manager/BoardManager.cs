@@ -559,14 +559,16 @@ public class BoardManager : MonoBehaviour
     private IEnumerator EnemyTurnCoroutine()
     {
         // 敌人移动
-        foreach (var enemy in _enemyPieces.ToArray()) // 使用ToArray避免修改集合时的问题
+        foreach (var enemy in _enemyPieces.ToArray()) // 
         {
             if (enemy != null)
             {
                 MoveEnemyTowardsGeneral(enemy);
-                yield return new WaitForSeconds(0.5f); // 延迟显示移动过程
+
+                yield return new WaitForSeconds(0.2f); // 设置新的间隔速度为0.2秒
             }
         }
+
 
         // 检查新棋子
         ProcessNewPieceCountdown();
