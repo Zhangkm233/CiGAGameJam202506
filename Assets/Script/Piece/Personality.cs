@@ -1,11 +1,14 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "NewPersonality", menuName = "Game/Personality")]
 public class Personality : ScriptableObject
 {
     public string PersonalityName; // 性格名称
     [TextArea] public string Description; // 性格描述
+
     [Tooltip("棋子的基础移动次数")]
     public int BaseMovementCount = 1;
     [Tooltip("棋子的初始心情等级")]
@@ -36,9 +39,9 @@ public class Personality : ScriptableObject
     public class EffectData
     {
         public EffectType Type; // 效果类型
-        public int Value; // 效果的数值，增加的移动次数、造成的伤害量等
-        public int Range; // 效果范围
-        public Piece.PieceType TargetType; // 目标棋子类型
+        public int Value; // 效果的数值，例如增加的移动次数、造成的伤害量等
+        public int Range; // 效果范围 (用于像 HealAdjacentFriendlies 这样的效果)
+        public Piece.PieceType TargetType; // 目标棋子类型 (用于针对性效果)
     }
 
     // 定义所有可能的特质效果类型（可扩展）
@@ -46,12 +49,10 @@ public class Personality : ScriptableObject
     {
         IncreaseMovementCountOfSelf, // 增加自身移动次数
         IncreaseMovementCountOfAdjacentFriendlies, // 增加相邻友方棋子的移动次数
-        HealAdjacentFriendlies, // 治疗相邻友方棋子（有生命值？）
-        DealDamageToAdjacentEnemies, // 对相邻敌人棋子造成伤害（有生命值？）
     }
 
     // 在棋子回合开始时，根据其当前心情等级应用相应的性格效果。
-    public void ApplyEffectOnTurnStart(Piece piece, int currentMoodLevel, /* TODO: 需要 BoardManager 类型参数 */ object boardManager) // 传入 BoardManager
+    public void ApplyEffectOnTurnStart(Piece piece, int currentMoodLevel)
     {
         foreach (var effect in MoodEffects)
         {
@@ -60,14 +61,14 @@ public class Personality : ScriptableObject
             {
                 foreach (var data in effect.OnTurnStartEffects)
                 {
-                    ApplyEffect(piece, data, boardManager); // 应用此效果，传入 BoardManager
+                    ApplyEffect(piece, data); // 应用此效果
                 }
             }
         }
     }
 
     // 在棋子回合结束时，根据其当前心情等级应用相应的性格效果。
-    public void ApplyEffectOnTurnEnd(Piece piece, int currentMoodLevel, /* TODO:需要BoardManager类型参数 */ object boardManager) // 传入BoardManager
+    public void ApplyEffectOnTurnEnd(Piece piece, int currentMoodLevel)
     {
         foreach (var effect in MoodEffects)
         {
@@ -75,15 +76,17 @@ public class Personality : ScriptableObject
             {
                 foreach (var data in effect.OnTurnEndEffects)
                 {
-                    ApplyEffect(piece, data, boardManager); // 应用此效果，传入BoardManager
+                    ApplyEffect(piece, data); // 应用此效果
                 }
             }
         }
     }
 
-    // 根据效果数据具体应用效果。
-    private void ApplyEffect(Piece sourcePiece, EffectData data, /* TODO:需要BoardManager类型参数 */ object boardManager)
+    // 根据效果数据具体应用效果
+    private void ApplyEffect(Piece sourcePiece, EffectData data)
     {
+        if (BoardManager.Instance == null) return; 
+
         switch (data.Type)
         {
             case EffectType.IncreaseMovementCountOfSelf:
@@ -91,26 +94,15 @@ public class Personality : ScriptableObject
                 Debug.Log($"{sourcePiece.Type} 因 {PersonalityName} (心情: {sourcePiece.CurrentMood.CurrentMoodLevel}) 增加自身 {data.Value} 移动次数。");
                 break;
             case EffectType.IncreaseMovementCountOfAdjacentFriendlies:
-                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 试图使相邻友方增加 {data.Value} 移动次数。");
-                // TODO:需要 BoardManager 来获取相邻的友方棋子，并增加其移动次数
-                // var actualBoardManager = boardManager as BoardManager;
-                // if (actualBoardManager != null)
-                // {
-                //     // 遍历sourcePiece周围3x3范围or （data.Range定义的范围？)
-                //     for (int x = -data.Range; x <= data.Range; x++)
-                //     {
-                //         for (int y = -data.Range; y <= data.Range; y++)
-                //         {
-                //             Vector2Int adjacentPos = sourcePiece.BoardPosition + new Vector2Int(x, y);
-                //             Piece adjacentPiece = actualBoardManager.GetPieceAtPosition(adjacentPos);
-                //             if (adjacentPiece != null && adjacentPiece.IsFriendly() && adjacentPiece != sourcePiece)
-                //             {
-                //                 adjacentPiece.CurrentMovementCount += data.Value;
-                //                 Debug.Log($"  - {adjacentPiece.Type} 增加了 {data.Value} 移动次数。");
-                //             }
-                //         }
-                //     }
-                // }
+                List<Piece> adjacentFriendlies = BoardManager.Instance.GetAdjacentPieces(sourcePiece.BoardPosition)
+                                                                     .Where(p => p.Type != Piece.PieceType.Enemy)
+                                                                     .ToList();
+                foreach (var friendly in adjacentFriendlies)
+                {
+                    friendly.CurrentMovementCount += data.Value;
+                    Debug.Log($"{friendly.Type} (友方) 因 {PersonalityName} 增加了 {data.Value} 移动次数。");
+                }
+                Debug.Log($"{sourcePiece.Type} (性格: {PersonalityName}) 使相邻友方增加 {data.Value} 移动次数。");
                 break;
 
         }

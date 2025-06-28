@@ -1,16 +1,19 @@
 using UnityEngine;
+
 public class PieceDeadState : PieceState
 {
     public PieceDeadState(Piece piece) : base(piece) { }
+
     public override void OnEnter()
     {
-        Debug.Log($"{_piece.name} 死亡了！");
-        // 播放死亡动画、音效
-        _piece.gameObject.SetActive(false);
+        Debug.Log($"{_piece.name} 进入死亡状态.");
+        // 死亡的视觉效果 (e.g.淡出，爆炸)
+        _piece.gameObject.SetActive(false); // 暂时隐藏棋子
+        // BoardManager最终会从其字典中移除棋子
     }
+
     public override void OnExit()
     {
-        // 死亡状态的清理，依赖对象池？
-        // GameObject.Destroy(_piece.gameObject);
+        Debug.Log($"{_piece.name} 退出死亡状态.");
     }
 }

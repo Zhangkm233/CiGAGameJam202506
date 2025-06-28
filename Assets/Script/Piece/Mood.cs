@@ -1,12 +1,13 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.Linq; 
 
 [System.Serializable]
 public class Mood
 {
     private Piece _ownerPiece; // 拥有此心情的棋子实例
-
-    [Range(0, 100)] // 心情等级范围限制在 0 到 100
+    [Range(0, 10)] // 心情等级范围限制在0到10
     [SerializeField] private int _currentMoodLevel; // 当前心情等级
 
     public int CurrentMoodLevel
@@ -15,7 +16,7 @@ public class Mood
         private set
         {
             int oldMood = _currentMoodLevel; // 记录旧的心情值
-            _currentMoodLevel = Mathf.Clamp(value, 0, 100); // 限制心情在有效范围内
+            _currentMoodLevel = Mathf.Clamp(value, 0, 10); // 限制心情在有效范围内
             if (oldMood != _currentMoodLevel) // 如果心情值实际发生了改变
             {
                 // 触发心情更新事件，通知外部监听者（UI等）
@@ -56,61 +57,37 @@ public class Mood
         CurrentMoodLevel -= amount;
     }
 
-    // 根据棋子周围 3x3 范围内的友方棋子数量更新心情
-    public void UpdateMoodBasedOnSurroundings(Vector2Int piecePosition, /* TODO: 需要 BoardManager 类型参数 */ object boardManager) // 传入 BoardManager
+    // 根据棋子周围3x3范围内的友方棋子数量更新心情
+    public void UpdateMoodBasedOnSurroundings(Vector2Int piecePosition)
     {
-        // 进行棋盘遍历和友方检查
-        int friendlyCount = 0;
-        // var actualBoardManager = boardManager as BoardManager;
-        // if (actualBoardManager != null)
-        // {
-        //     // 遍历 3x3 范围
-        //     for (int x = -1; x <= 1; x++)
-        //     {
-        //         for (int y = -1; y <= 1; y++)
-        //         {
-        //             if (x == 0 && y == 0) continue; // 跳过自身
+        if (BoardManager.Instance == null) return;
 
-        //             Vector2Int adjacentPos = piecePosition + new Vector2Int(x, y);
-        //             // TODO:需要 BoardManager 来获取 adjacentPos 位置上的棋子
-        //             Piece adjacentPiece = actualBoardManager.GetPieceAtPosition(adjacentPos);
+        List<Piece> surroundingPieces = BoardManager.Instance.GetPiecesInRange(piecePosition, 1); // 1格范围表示3x3
 
-        //             if (adjacentPiece != null && adjacentPiece.IsFriendly())
-        //             {
-        //                 friendlyCount++;
-        //             }
-        //         }
-        //     }
-        // }
+        // 计算友方棋子数量(不包括自身)
+        int friendlyCount = surroundingPieces.Count(p => p.Type != Piece.PieceType.Enemy && p != _ownerPiece);
 
-
-        if (friendlyCount > 0)
-        {
-            IncreaseMood(5 * friendlyCount); // 根据友方数量增加心情，可调整数值
-            Debug.Log($"{_ownerPiece.Type} 周围有 {friendlyCount} 个友方，心情增加。");
-        }
-        else
-        {
-            DecreaseMood(10); // 周围没有友方，心情减少，可调整数值
-            Debug.Log($"{_ownerPiece.Type} 周围没有友方，心情减少。");
-        }
+        // e.g.心情随着周围友方棋子数量的增加而增加
+        CurrentMoodLevel += friendlyCount ; // 每个友方棋子增加1点心情
+        Debug.Log($"{_ownerPiece.Type} ({_ownerPiece.BoardPosition}) 周围有 {friendlyCount} 个友方棋子。心情更新为: {CurrentMoodLevel}");
     }
 
+
     // 在回合开始时，根据当前心情等级应用所属性格的效果
-    public void ApplyPersonalityEffectOnTurnStart(Piece piece, /* TODO: 需要 BoardManager 类型参数 */ object boardManager)
+    public void ApplyPersonalityEffectOnTurnStart(Piece piece)
     {
         if (piece.PiecePersonality != null)
         {
-            piece.PiecePersonality.ApplyEffectOnTurnStart(piece, CurrentMoodLevel, boardManager); // 传入 BoardManager
+            piece.PiecePersonality.ApplyEffectOnTurnStart(piece, CurrentMoodLevel);
         }
     }
 
     // 在回合结束时，根据当前心情等级应用所属性格的效果。
-    public void ApplyPersonalityEffectOnTurnEnd(Piece piece, /* TODO: 需要 BoardManager 类型参数 */ object boardManager)
+    public void ApplyPersonalityEffectOnTurnEnd(Piece piece)
     {
         if (piece.PiecePersonality != null)
         {
-            piece.PiecePersonality.ApplyEffectOnTurnEnd(piece, CurrentMoodLevel, boardManager); // 传入 BoardManager
+            piece.PiecePersonality.ApplyEffectOnTurnEnd(piece, CurrentMoodLevel);
         }
     }
 }
