@@ -4,10 +4,7 @@ public class TileGenerator : MonoBehaviour
 {
     public GameObject tilePrefab; // 预制体引用
 
-    void Start()
-    {
-        GenTiles();
-    }
+    
 
     public void GenTiles()
     {
