@@ -6,13 +6,23 @@ public class PawnPiece : Piece
     public override List<Vector2Int> GetPossibleMoves()
     {
         List<Vector2Int> possibleMoves = new List<Vector2Int>();
-        Vector2Int forward = new Vector2Int(0, 1); // 卒向前移动
 
-        // 简单的向前移动
-        Vector2Int targetPos = BoardPosition + forward;
-        if (BoardManager.Instance.IsValidBoardPosition(targetPos) && BoardManager.Instance.GetPieceAtPosition(targetPos) == null)
+        // 卒可以上下左右移动
+        Vector2Int[] directions =
         {
-            possibleMoves.Add(targetPos);
+            new Vector2Int(0, 1), new Vector2Int(0, -1),
+            new Vector2Int(1, 0), new Vector2Int(-1, 0)
+        };
+
+        foreach (Vector2Int dir in directions) {
+            Vector2Int targetPos = BoardPosition + dir;
+            if (BoardManager.Instance.IsValidBoardPosition(targetPos)) {
+                Piece targetPiece = BoardManager.Instance.GetPieceAtPosition(targetPos);
+                // 将可以移动到空位或攻击敌人
+                if (targetPiece == null || targetPiece.Type == PieceType.Enemy) {
+                    possibleMoves.Add(targetPos);
+                }
+            }
         }
 
         // 简单的斜线攻击（卒的进化的一种实现想法，不需要可以删去）
