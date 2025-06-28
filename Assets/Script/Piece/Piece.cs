@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using DG.Tweening;
 
 public abstract class Piece : MonoBehaviour
 {
@@ -89,20 +90,25 @@ public abstract class Piece : MonoBehaviour
 
     IEnumerator MovingAnimationCoroutine(Vector2Int startPosition, Vector2Int targetPosition)
     {
-        
-        // 这里可以实现平滑移动的动画效果
-        float elapsedTime = 0f;
-        float duration = 0.5f; // 移动持续时间
-        Vector3 startWorldPos = BoardManager.Instance.GetWorldPosition(startPosition);
-        Vector3 targetWorldPos = BoardManager.Instance.GetWorldPosition(targetPosition);
+        Tweener tweener = transform.DOMove(BoardManager.Instance.GetWorldPosition(targetPosition), 0.5f);
+        tweener.SetEase(Ease.OutExpo); // 设置动画缓动效果
 
-        while (elapsedTime < duration)
-        {
-            transform.position = Vector3.Lerp(startWorldPos, targetWorldPos, elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
-            yield return null; // 等待下一帧
-        }
-        transform.position = targetWorldPos; // 确保最终位置正确
+        Tweener ScaleTweener = transform.DOScale(1.6f, 0.25f).SetLoops(2, LoopType.Yoyo);
+        ScaleTweener.SetEase(Ease.OutExpo); // 设置缩放动画缓动效果
+        yield return null;
+        // // 这里可以实现平滑移动的动画效果
+        // float elapsedTime = 0f;
+        // float duration = 0.5f; // 移动持续时间
+        // Vector3 startWorldPos = BoardManager.Instance.GetWorldPosition(startPosition);
+        // Vector3 targetWorldPos = BoardManager.Instance.GetWorldPosition(targetPosition);
+
+        // while (elapsedTime < duration)
+        // {
+        //     transform.position = Vector3.Lerp(startWorldPos, targetWorldPos, elapsedTime / duration);
+        //     elapsedTime += Time.deltaTime;
+        //     yield return null; // 等待下一帧
+        // }
+        // transform.position = targetWorldPos; // 确保最终位置正确
     }
 
     // 处理棋子攻击另一个目标棋子的逻辑。此方法仅包含攻击动画/音效触发等，实际吃子和移除由BoardManager处理。
