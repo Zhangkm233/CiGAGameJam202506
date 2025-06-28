@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq; // Added for .ToList() in CacheAllTiles
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -29,6 +30,21 @@ public class BoardManager : MonoBehaviour
     public Personality PersonalityGeneral;
     public List<Personality> pawnPersonalities;
 
+    // --- 障碍物设置 ---
+    [Header("障碍物设置")]
+    [Tooltip("在回合开始时刷新障碍物的概率（0到1）。当障碍物数量超过限制时，必定触发刷新。")]
+    [Range(0f, 1f)]
+    [SerializeField] private float obstacleRefreshChancePerTurn = 0.5f;
+    [Tooltip("游戏开始时生成的初始障碍物数量。")]
+    [SerializeField] private int initialObstacleCount = 12;
+    [Tooltip("每次刷新时尝试移除的现有障碍物的百分比。")]
+    [Range(0f, 1f)]
+    [SerializeField] private float obstacleRemovalRate = 0.2f;
+    [Tooltip("每次刷新时尝试将空格子变为障碍物的百分比。")]
+    [Range(0f, 1f)]
+    [SerializeField] private float obstacleAdditionRate = 0.1f;
+
+
     [Header("对象池")]
     public PiecePool enemyPool; // 敌人池，用于存放生成的敌人预制体
 
@@ -36,6 +52,10 @@ public class BoardManager : MonoBehaviour
     private List<Tile> _highlightedTiles = new(); // 高亮格子缓存
     private List<Piece> _friendlyPieces = new(); // 友方棋子列表
     private List<Piece> _enemyPieces = new(); // 敌人棋子列表
+
+    // --- 图块缓存 ---
+    private Dictionary<Vector2Int, Tile> _tileDict = new();
+    // 用于快速查找图块的缓存
 
     // 游戏状态管理
     private int _currentTurn = 1; // 当前回合数
@@ -53,6 +73,8 @@ public class BoardManager : MonoBehaviour
         {
             Instance = this;
             _camera = Camera.main;
+            // --- 为提高性能，在Awake时缓存所有图块 ---
+            CacheAllTiles();
         }
         else
         {
@@ -66,6 +88,225 @@ public class BoardManager : MonoBehaviour
     {
         HandleMouseInput();
     }
+
+    // --- 将所有图块缓存到一个字典中以便快速访问 ---
+    private void CacheAllTiles()
+    {
+        _tileDict.Clear();
+        GameObject[] tileObjects = GameObject.FindGameObjectsWithTag("TileGameObject");
+        if (tileObjects != null)
+        {
+            foreach (GameObject tileObj in tileObjects)
+            {
+                Tile tile = tileObj.GetComponent<Tile>();
+                if (tile != null)
+                {
+                    // 将世界坐标转换为棋盘坐标作为字典的键
+                    Vector2Int boardPos = GetBoardPosition(tile.transform.position);
+                    _tileDict[boardPos] = tile;
+                }
+            }
+        }
+    }
+
+    // --- 使用图块缓存以实现更快的查找 ---
+    public Tile GetTileAtPosition(Vector2Int pos)
+    {
+        _tileDict.TryGetValue(pos, out var tile);
+        return tile;
+    }
+
+    // 初始化棋盘
+    public void InitializeBoard()
+    {
+        // 清空棋子数据
+        foreach (var kv in _pieceDict)
+        {
+            if (kv.Value != null)
+                Destroy(kv.Value.gameObject);
+        }
+        _pieceDict.Clear();
+        _friendlyPieces.Clear();
+        _enemyPieces.Clear();
+
+        // 清空所有Tile的unitOccupied和isObstacle
+        foreach (var tile in _tileDict.Values) // 使用缓存的_tileDict
+        {
+            if (tile != null)
+            {
+                tile.unitOccupied = null;
+                tile.SetObstacle(false); // 确保重置障碍物状态
+            }
+        }
+
+        // --- 为新游戏生成初始障碍物 ---
+        GenerateInitialObstacles();
+
+        // 重置游戏状态
+        _currentTurn = 1;
+        _newPieceCountdown = 3;
+        _totalNewPiecesGained = 0;
+        _enemiesPerTurn = 1;
+
+        // 1. 生成"将"棋，放在棋盘中心
+        Vector2Int generalPos = new Vector2Int(boardWidth / 2, boardHeight / 2);
+        GameObject generalObj = Instantiate(generalPrefab, GetWorldPosition(generalPos), Quaternion.identity, transform);
+        Piece generalPiece = generalObj.GetComponent<Piece>();
+        generalPiece.InitializePiece(PersonalityGeneral, generalPos);
+        generalPiece.CurrentMovementCount = 0; // 将棋不可移动
+        AddPiece(generalPiece, generalPos);
+
+        // 2. 生成两个初始卒棋，在将棋的5x5范围内随机位置
+        List<Vector2Int> availablePositionsNearGeneral = GetAvailablePositionsNearGeneral(); // 使用您现有的方法
+
+
+        // 随机挑选两个独一无二的位置来生成卒
+        List<Vector2Int> selectedPawnPositions = new List<Vector2Int>();
+        while (selectedPawnPositions.Count < 2 && availablePositionsNearGeneral.Count > 0)
+        {
+            int randomIndex = Random.Range(0, availablePositionsNearGeneral.Count);
+            Vector2Int pos = availablePositionsNearGeneral[randomIndex];
+
+            selectedPawnPositions.Add(pos);
+            availablePositionsNearGeneral.RemoveAt(randomIndex); // 移除已选位置，确保唯一性
+        }
+
+        foreach (Vector2Int pawnPos in selectedPawnPositions)
+        {
+            GameObject pawnObj = Instantiate(pawnPrefab, GetWorldPosition(pawnPos), Quaternion.identity, transform);
+            Piece pawnPiece = pawnObj.GetComponent<Piece>();
+            Personality pawnPersonality = GetRandomPersonality(); // 卒棋子可以有随机性格
+            pawnPiece.InitializePiece(pawnPersonality, pawnPos);
+            AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到 _friendlyPieces 列表并设置到棋盘上
+        }
+    }
+
+    // --- 生成初始障碍物集合的方法 ---
+    private void GenerateInitialObstacles()
+    {
+        // 清除所有先前的障碍物 (再次确保)
+        foreach (var tile in _tileDict.Values)
+        {
+            if (tile.isObstacle)
+            {
+                tile.SetObstacle(false);
+            }
+        }
+
+        // 获取所有可以成为障碍物的图块列表
+        List<Tile> validTiles = new List<Tile>();
+        Vector2Int generalPos = new Vector2Int(boardWidth / 2, boardHeight / 2); // “将”的起始位置
+
+        foreach (var kvp in _tileDict) // 使用缓存的_tileDict
+        {
+            // 确保“将”的起始图块及其附近区域不是障碍物
+            // 考虑3x3区域避免将棋被困
+            if (Vector2Int.Distance(kvp.Key, generalPos) > 1 && kvp.Value.unitOccupied == null) // 确保图块上没有棋子
+            {
+                validTiles.Add(kvp.Value);
+            }
+        }
+
+        // 根据棋盘大小和棋子数量计算最大障碍物数量
+        // 初始生成时，只有初始的将棋和两个卒棋，但为了逻辑统一，仍使用完整计算
+        int totalPieceCount = _friendlyPieces.Count + _enemyPieces.Count;
+        int maxFromPieceConstraint = (boardWidth * boardHeight) - (totalPieceCount * 2);
+        int maxFromBoardFractionConstraint = (boardWidth * boardHeight) / 3;
+        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint);
+
+        int countToGenerate = Mathf.Min(initialObstacleCount, maxTotalObstacles); // 初始生成数量也不能超过最大限制
+
+        for (int i = 0; i < countToGenerate; i++)
+        {
+            if (validTiles.Count == 0) break;
+            int randIdx = Random.Range(0, validTiles.Count);
+            Tile tileToSet = validTiles[randIdx];
+            tileToSet.SetObstacle(true);
+            validTiles.RemoveAt(randIdx); // 确保我们不会重复选择同一个图块
+        }
+    }
+
+    // --- 在棋盘上随机更新障碍物的方法 ---
+    private void UpdateObstacles()
+    {
+        // 1. 获取所有未被占据的图块，并将它们分为障碍物和普通图块。
+        List<Tile> unoccupiedNormalTiles = new List<Tile>();
+        List<Tile> unoccupiedObstacleTiles = new List<Tile>();
+
+        foreach (var tile in _tileDict.Values) // 使用缓存的_tileDict
+        {
+            if (tile.unitOccupied == null) // 图块必须为空才能被更改
+            {
+                if (tile.isObstacle)
+                    unoccupiedObstacleTiles.Add(tile);
+                else
+                    unoccupiedNormalTiles.Add(tile);
+            }
+        }
+
+        // 2. 根据约束条件计算允许的最大障碍物数量
+        int totalPieceCount = _friendlyPieces.Count + _enemyPieces.Count;
+        int maxFromPieceConstraint = (boardWidth * boardHeight) - (totalPieceCount * 2);
+        int maxFromBoardFractionConstraint = (boardWidth * boardHeight) / 3;
+        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint);
+
+        // 计算当前棋盘上所有障碍物的总数
+        int actualTotalObstacleCount = 0;
+        foreach (var tile in _tileDict.Values) // 使用缓存的_tileDict
+        {
+            if (tile.isObstacle)
+            {
+                actualTotalObstacleCount++;
+            }
+        }
+
+        // 判断是否需要强制更新（当实际障碍物数量超过最大允许数量时）
+        bool forceUpdate = (actualTotalObstacleCount > maxTotalObstacles);
+
+        // 如果不需要强制更新，并且随机事件未触发，则直接返回
+        if (!forceUpdate && Random.Range(0f, 1f) > obstacleRefreshChancePerTurn)
+        {
+            return; // 未通过概率检查，本回合无变化。
+        }
+
+        // --- 实际的障碍物刷新逻辑，只有在forceUpdate为true或随机事件触发时才会执行 ---
+
+        // 3. 随机移除一些现有的障碍物
+        // 期望根据移除率移除的障碍物数量
+        int obstaclesToRemoveByRate = Mathf.FloorToInt(unoccupiedObstacleTiles.Count * obstacleRemovalRate);
+        // 为了满足约束至少需要移除的障碍物数量
+        int neededToRemoveToMeetConstraint = Mathf.Max(0, actualTotalObstacleCount - maxTotalObstacles);
+
+        // 实际需要移除的障碍物数量取两者中的最大值，以确保满足约束
+        int obstaclesToReallyRemove = Mathf.Max(obstaclesToRemoveByRate, neededToRemoveToMeetConstraint);
+
+        for (int i = 0; i < obstaclesToReallyRemove; i++)
+        {
+            if (unoccupiedObstacleTiles.Count == 0) break; // 如果没有可移除的障碍物了，则停止
+            int randIdx = Random.Range(0, unoccupiedObstacleTiles.Count);
+            Tile tileToClear = unoccupiedObstacleTiles[randIdx];
+            tileToClear.SetObstacle(false); // 将障碍物变回正常格子
+            unoccupiedNormalTiles.Add(tileToClear);
+            unoccupiedObstacleTiles.RemoveAt(randIdx);
+            actualTotalObstacleCount--; // 更新实际障碍物总数
+        }
+
+        // 4. 在遵循总数上限的前提下，随机添加新的障碍物
+        int obstaclesToAdd = Mathf.FloorToInt(unoccupiedNormalTiles.Count * obstacleAdditionRate);
+        for (int i = 0; i < obstaclesToAdd; i++)
+        {
+            // 如果已达到允许的最大障碍物数量，则停止添加
+            if (actualTotalObstacleCount >= maxTotalObstacles) break;
+            if (unoccupiedNormalTiles.Count == 0) break; // 如果没有空闲的正常格子了，则停止
+            int randIdx = Random.Range(0, unoccupiedNormalTiles.Count);
+            Tile tileToSet = unoccupiedNormalTiles[randIdx];
+            tileToSet.SetObstacle(true); // 将正常格子变为障碍物
+            unoccupiedObstacleTiles.Add(tileToSet);
+            unoccupiedNormalTiles.RemoveAt(randIdx);
+            actualTotalObstacleCount++; // 更新实际障碍物总数
+        }
+    }
+
 
     // 处理鼠标输入
     private void HandleMouseInput()
@@ -173,7 +414,7 @@ public class BoardManager : MonoBehaviour
             // 移动到空格
             piece.StateMachine?.ChangeState(new PieceMovingState(piece, targetPos));
         }
-        // TODO： 需要更新棋子的移动次数
+        // TODO：需要更新棋子的移动次数
         // 更新棋子位置
         MovePiece(piece, targetPos);
     }
@@ -209,7 +450,7 @@ public class BoardManager : MonoBehaviour
     }
 
     // 从棋盘移除棋子
-    public void RemovePiece(Vector2Int pos,bool IsPuttingBackToPool)
+    public void RemovePiece(Vector2Int pos, bool IsPuttingBackToPool)
     {
         if (_pieceDict.TryGetValue(pos, out var piece))
         {
@@ -217,10 +458,12 @@ public class BoardManager : MonoBehaviour
             if (piece.Type == Piece.PieceType.Enemy)
             {
                 _enemyPieces.Remove(piece);
-                if (IsPuttingBackToPool) {
+                if (IsPuttingBackToPool)
+                {
                     enemyPool.ReturnEnemy(piece.gameObject); // 将敌人棋子放回对象池
                 }
-            } else
+            }
+            else
             {
                 _friendlyPieces.Remove(piece);
             }
@@ -233,28 +476,19 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-
-    // 获取指定位置的Tile
-    public Tile GetTileAtPosition(Vector2Int pos)
-    {
-        string tileName = $"Tile_{pos.x}_{pos.y}";
-        GameObject tileObj = GameObject.Find(tileName);
-        if (tileObj != null)
-            return tileObj.GetComponent<Tile>();
-        return null;
-    }
-
     // 棋盘坐标转世界坐标
-    public Vector3 GetWorldPosition(Vector2Int boardPos) {
-        return tile_0_0.transform.position + new Vector3(boardPos.x * offset,boardPos.y * offset,0);
+    public Vector3 GetWorldPosition(Vector2Int boardPos)
+    {
+        return tile_0_0.transform.position + new Vector3(boardPos.x * offset, boardPos.y * offset, 0);
     }
 
     // 世界坐标转棋盘坐标
-    public Vector2Int GetBoardPosition(Vector3 worldPos) {
+    public Vector2Int GetBoardPosition(Vector3 worldPos)
+    {
         Vector3 local = worldPos - tile_0_0.transform.position;
         int x = Mathf.RoundToInt(local.x / offset);
         int y = Mathf.RoundToInt(local.y / offset);
-        return new Vector2Int(x,y);
+        return new Vector2Int(x, y);
     }
 
     // 检查棋盘坐标是否在有效范围内
@@ -269,7 +503,7 @@ public class BoardManager : MonoBehaviour
         if (!IsInBounds(pos))
             return false;
         Tile tile = GetTileAtPosition(pos);
-        if (tile == null || tile.isObstacle)
+        if (tile == null || tile.isObstacle) // 这个检查现在可以与动态障碍物一起工作
             return false;
         return true;
     }
@@ -307,7 +541,7 @@ public class BoardManager : MonoBehaviour
     {
         if (piece == null) return;
         Vector2Int oldPos = piece.BoardPosition;
-        RemovePiece(oldPos,false);
+        RemovePiece(oldPos, false); // 移动时旧位置的棋子不需要回池
 
         // 如果目标格有敌方棋子，先处理攻击
         Piece targetPiece = GetPieceAtPosition(targetPos);
@@ -319,7 +553,7 @@ public class BoardManager : MonoBehaviour
         // 移动棋子
         AddPiece(piece, targetPos);
         piece.MovingAnimation(oldPos, targetPos); // 使用平滑移动动画
-        piece.CurrentMovementCount --; // 减少移动次数
+        piece.CurrentMovementCount--; // 减少移动次数
         UpdatePieceMove(piece); // 更新棋子移动次数显示
         //piece.transform.position = GetWorldPosition(targetPos);
     }
@@ -330,75 +564,12 @@ public class BoardManager : MonoBehaviour
         if (attacker == null || target == null) return;
         // 触发攻击逻辑
         target.StateMachine?.ChangeState(new PieceDeadState(target));
-        RemovePiece(target.BoardPosition,true);
+        RemovePiece(target.BoardPosition, true); // 敌方棋子被攻击后回池
 
         // 检查是否攻击了将棋
         if (target.Type == Piece.PieceType.Pawn && IsGeneral(target)) // 假设将棋也是Pawn类型但有特殊标记
         {
             GameOver();
-        }
-    }
-
-    // 初始化棋盘
-    public void InitializeBoard()
-    {
-        // 清空棋子数据
-        foreach (var kv in _pieceDict)
-        {
-            if (kv.Value != null)
-                Destroy(kv.Value.gameObject);
-        }
-        _pieceDict.Clear();
-        _friendlyPieces.Clear();
-        _enemyPieces.Clear();
-
-        // 清空所有Tile的unitOccupied
-        GameObject[] tiles = GameObject.FindGameObjectsWithTag("TileGameObject");
-        if (tiles != null)
-        {
-            foreach (GameObject t in tiles)
-            {
-                Tile tile = t.GetComponent<Tile>();
-                if (tile != null) tile.unitOccupied = null;
-            }
-        }
-
-        // 重置游戏状态
-        _currentTurn = 1;
-        _newPieceCountdown = 3;
-        _totalNewPiecesGained = 0;
-        _enemiesPerTurn = 1;
-
-        // 1. 生成"将"棋，放在棋盘中心
-        Vector2Int generalPos = new Vector2Int(boardWidth / 2, boardHeight / 2);
-        GameObject generalObj = Instantiate(generalPrefab, GetWorldPosition(generalPos), Quaternion.identity, transform);
-        Piece generalPiece = generalObj.GetComponent<Piece>();
-        generalPiece.InitializePiece(PersonalityGeneral, generalPos);
-        generalPiece.CurrentMovementCount = 0; // 将棋不可移动
-        AddPiece(generalPiece, generalPos);
-
-        // 2. 生成两个初始卒棋，在将棋的5x5范围内随机位置
-        List<Vector2Int> availablePositionsNearGeneral = GetAvailablePositionsNearGeneral(); // 使用您现有的方法
-
-
-        // 随机挑选两个独一无二的位置来生成卒
-        List<Vector2Int> selectedPawnPositions = new List<Vector2Int>();
-        while (selectedPawnPositions.Count < 2 && availablePositionsNearGeneral.Count > 0)
-        {
-            int randomIndex = Random.Range(0, availablePositionsNearGeneral.Count);
-            Vector2Int pos = availablePositionsNearGeneral[randomIndex];
-
-            selectedPawnPositions.Add(pos);
-            availablePositionsNearGeneral.RemoveAt(randomIndex); // 移除已选位置，确保唯一性
-        }
-
-        foreach (Vector2Int pawnPos in selectedPawnPositions)
-        {
-            GameObject pawnObj = Instantiate(pawnPrefab, GetWorldPosition(pawnPos), Quaternion.identity, transform);
-            Piece pawnPiece = pawnObj.GetComponent<Piece>();
-            Personality pawnPersonality = GetRandomPersonality(); // 卒棋子可以有随机性格
-            pawnPiece.InitializePiece(pawnPersonality, pawnPos);
-            AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到 _friendlyPieces 列表并设置到棋盘上
         }
     }
 
@@ -523,6 +694,9 @@ public class BoardManager : MonoBehaviour
     public void StartNewTurn()
     {
         _currentTurn++;
+        // --- 在每回合开始时更新障碍物 ---
+        UpdateObstacles(); // 在每回合开始时更新障碍物
+
         // 1. 敌人出现
         SpawnEnemies();
         // 更新移动次数
@@ -539,20 +713,26 @@ public class BoardManager : MonoBehaviour
     {
         StartCoroutine(EnemyTurnCoroutine());
     }
-    public void UpdateEachPieceMove() {
-        foreach (var piece in _friendlyPieces) {
-            if (piece != null) {
+    public void UpdateEachPieceMove()
+    {
+        foreach (var piece in _friendlyPieces)
+        {
+            if (piece != null)
+            {
                 UpdatePieceMove(piece);
             }
         }
-        foreach (var piece in _enemyPieces) {
-            if (piece != null) {
+        foreach (var piece in _enemyPieces)
+        {
+            if (piece != null)
+            {
                 UpdatePieceMove(piece);
             }
         }
     }
 
-    public void UpdatePieceMove(Piece piece){
+    public void UpdatePieceMove(Piece piece)
+    {
         piece.transform.Find("PieceCanvas").Find("PieceMove").GetComponent<TMP_Text>().text = (piece.CurrentMovementCount).ToString();
     }
 
@@ -560,7 +740,7 @@ public class BoardManager : MonoBehaviour
     private IEnumerator EnemyTurnCoroutine()
     {
         // 敌人移动
-        foreach (var enemy in _enemyPieces.ToArray()) // 
+        foreach (var enemy in _enemyPieces.ToArray()) //
         {
             if (enemy != null)
             {
@@ -690,7 +870,7 @@ public class BoardManager : MonoBehaviour
             if (nearPositions.Count > 0)
             {
                 int idx = Random.Range(0, nearPositions.Count);
-                Vector2Int posToSpawn = nearPositions[idx]; 
+                Vector2Int posToSpawn = nearPositions[idx];
 
                 // 随机选择棋子类型和性格
                 Piece.PieceType randomType = GetRandomPieceType();
