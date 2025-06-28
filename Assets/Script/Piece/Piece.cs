@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public abstract class Piece : MonoBehaviour
 {
@@ -78,6 +79,29 @@ public abstract class Piece : MonoBehaviour
     {
         BoardPosition = targetPosition; // 更新棋子的内部坐标
         Debug.Log($"{Type} 内部位置更新到 {BoardPosition}");
+    }
+
+    //棋子平滑移动的动画
+    public void MovingAnimation(Vector2Int startPosition, Vector2Int targetPosition)
+    {
+        StartCoroutine(MovingAnimationCoroutine(startPosition, targetPosition));
+    }
+
+    IEnumerator MovingAnimationCoroutine(Vector2Int startPosition, Vector2Int targetPosition)
+    {
+        // 这里可以实现平滑移动的动画效果
+        float elapsedTime = 0f;
+        float duration = 0.5f; // 移动持续时间
+        Vector3 startWorldPos = BoardManager.Instance.GetWorldPosition(startPosition);
+        Vector3 targetWorldPos = BoardManager.Instance.GetWorldPosition(targetPosition);
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startWorldPos, targetWorldPos, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null; // 等待下一帧
+        }
+        transform.position = targetWorldPos; // 确保最终位置正确
     }
 
     // 处理棋子攻击另一个目标棋子的逻辑。此方法仅包含攻击动画/音效触发等，实际吃子和移除由BoardManager处理。

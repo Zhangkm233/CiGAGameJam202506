@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BoardManager : MonoBehaviour
@@ -307,7 +308,8 @@ public class BoardManager : MonoBehaviour
 
         // 移动棋子
         AddPiece(piece, targetPos);
-        piece.transform.position = GetWorldPosition(targetPos);
+        piece.MovingAnimation(oldPos, targetPos); // 使用平滑移动动画
+        //piece.transform.position = GetWorldPosition(targetPos);
     }
 
     // 棋子攻击（用于状态机调用）

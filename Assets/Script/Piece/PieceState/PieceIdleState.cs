@@ -17,6 +17,7 @@ public class PieceIdleState : PieceState
         // {
         //     _piece.StateMachine.ChangeState(new PieceSelectedState(_piece));
         // }
+        PlayIdleAnimation();
     }
     public override void OnExit()
     {
@@ -25,4 +26,27 @@ public class PieceIdleState : PieceState
 
     // 辅助函数，用于检测是否点击了该棋子，需要射线检测之类的
     private bool IsClicked(Piece piece) { return false; }
+
+    // 棋子的待机动画
+    private void PlayIdleAnimation()
+    {
+        Mood mood = _piece.CurrentMood; // 获取棋子的当前心情
+        
+        // 根据棋子的心情播放不同的待机动画
+        if (mood.CurrentMoodLevel <= 33)
+        {
+            // TODO: 掉眼泪
+        }
+        else if (mood.CurrentMoodLevel <= 66)
+        {
+            // 上下浮动
+            float offsetY = Mathf.Sin(Time.time * 3) * 0.05f; 
+            _piece.transform.position += new Vector3(0, offsetY, 0);
+        }
+        else
+        {   
+            // TODO: 上下跳跃
+        }
+        
+    }
 }
