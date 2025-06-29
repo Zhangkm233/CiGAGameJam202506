@@ -148,7 +148,6 @@ public class BoardManager : MonoBehaviour
         Piece generalPiece = generalObj.GetComponent<Piece>();
         generalPiece.InitializePiece(PersonalityGeneral, generalPos);
         generalPiece.CurrentMovementCount = 1;
-        // 将棋不可移动
         AddPiece(generalPiece, generalPos);
         // 2. 生成两个初始卒棋，在将棋的5x5范围内随机位置
         List<Vector2Int> availablePositionsNearGeneral = GetAvailablePositionsNearGeneral();

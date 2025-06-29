@@ -267,6 +267,7 @@ public class GameManager : MonoBehaviour
             }
             // 目前不需要AppendInterval，因为这是序列的最后一个动画
             // sequence.AppendInterval(animationDuration); // 后面还有其他逻辑需要等待
+            
         }
     }
 
