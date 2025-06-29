@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - TileGameObject
+  - PieceGameObject
   layers:
   - Default
   - TransparentFX
