@@ -117,6 +117,10 @@ public class PieceInfoUI : MonoBehaviour
                 positiveEffectText.text = "淡然满足效果：无";
                 negativeEffectText.text = "淡然痛苦效果：在回合开始时，自身可移动次数-1";
                 break;
+            default:
+                positiveEffectText.text = " ";
+                negativeEffectText.text = " ";
+                break;
                 // ... 在此添加其他性格的描述
 
         }

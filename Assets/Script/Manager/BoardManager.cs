@@ -475,12 +475,12 @@ public class BoardManager : MonoBehaviour
         if (targetPiece != null && targetPiece.Type != Piece.PieceType.Enemy) return;
 
 
-    // 不再过早进入PieceAttackingState。
-    piece.StateMachine?.ChangeState(new PieceMovingState(piece, targetPos));
+        // 不再过早进入PieceAttackingState。
+        piece.StateMachine?.ChangeState(new PieceMovingState(piece, targetPos));
 
-    // 直接调用MovePiece，该方法现在负责处理数据更新和启动动画
-    MovePiece(piece, targetPos); 
-}
+        // 直接调用MovePiece，该方法现在负责处理数据更新和启动动画
+        MovePiece(piece, targetPos); 
+    }
     // 获取指定棋盘坐标上的棋子
     public Piece GetPieceAtPosition(Vector2Int pos)
     {
@@ -496,10 +496,12 @@ public class BoardManager : MonoBehaviour
         // 添加到对应列表
         if (piece.Type == Piece.PieceType.Enemy)
         {
+            Debug.Log($"添加敌方棋子: {piece.name} at {pos}");
             _enemyPieces.Add(piece);
         }
         else
         {
+            Debug.Log($"添加友方棋子: {piece.name} at {pos}");
             _friendlyPieces.Add(piece);
         }
         // 关联Tile
@@ -514,6 +516,7 @@ public class BoardManager : MonoBehaviour
             // 从对应列表移除
             if (piece.Type == Piece.PieceType.Enemy)
             {
+                Debug.Log($"移除敌方棋子: {piece.name} at {pos}");
                 _enemyPieces.Remove(piece);
                 /*
                 if (IsPuttingBackToPool)
@@ -524,6 +527,7 @@ public class BoardManager : MonoBehaviour
             }
             else
             {
+                Debug.Log($"移除友方棋子: {piece.name} at {pos}");
                 _friendlyPieces.Remove(piece);
             }
             // 解除Tile关联
@@ -617,10 +621,13 @@ public class BoardManager : MonoBehaviour
     public void AttackPiece(Piece attacker, Piece target)
     {
         if (attacker == null || target == null) return;
+        if (attacker == target) return;
+
         // 触发攻击逻辑
         target.StateMachine?.ChangeState(new PieceDeadState(target));
+        Debug.Log($"攻击棋子: {attacker.name} 攻击 {target.name} 在位置 {target.BoardPosition}");
+
         RemovePiece(target.BoardPosition, true);
-        // 敌方棋子被攻击后回池
         // 检查是否攻击了将棋
         if (target.Type == Piece.PieceType.General)
         {
