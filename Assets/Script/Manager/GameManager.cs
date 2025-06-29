@@ -155,8 +155,8 @@ public class GameManager : MonoBehaviour
             // 1. 主界面快速向下移出
             if (_manager.mainMenuAnimator != null)
             {
-                _manager.mainMenuAnimator.SetTrigger("MoveOut"); // 触发Animator的"MoveOut"动画
-                // 或者直接播放动画状态：_manager.mainMenuAnimator.Play("MoveDown_Out");
+                //_manager.mainMenuAnimator.SetTrigger("MoveOut"); // 触发Animator的"MoveOut"动画
+                _manager.mainMenuAnimator.Play("MoveOut");
                 sequence.AppendInterval(animationDuration); // 等待动画播放完毕的时间
             }
             else
@@ -175,8 +175,9 @@ public class GameManager : MonoBehaviour
             // 3. 游戏界面从下往上移入
             if (_manager.gamePanelAnimator != null)
             {
-                _manager.gamePanelAnimator.SetTrigger("MoveIn"); // 触发Animator的"MoveIn"动画
-                // 或者直接播放动画状态：_manager.gamePanelAnimator.Play("MoveUp_In");
+                //_manager.gamePanelAnimator.SetTrigger("MoveIn"); // 触发Animator的"MoveIn"动画
+                _manager.gamePanelAnimator.Play("MoveIn");
+                //不需要播放，因为此时还没有激活游戏界面，直接设置为激活即播放
                 sequence.AppendInterval(animationDuration); // 等待动画时间
             }
             else
