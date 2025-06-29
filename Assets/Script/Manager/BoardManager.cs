@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviour
     public List<Personality> pawnPersonalities;
     [Header("游戏控制器")]
     public AudioController audioController; // 音频控制器引用，用于播放音效
+    public GlobalInfoUI globalInfoUI; // 全局信息UI引用，用于显示回合数等信息
     // --- 障碍物设置 ---
     [Header("障碍物设置")]
     [Tooltip("在回合开始时刷新障碍物的概率（0到1）。当障碍物数量超过限制时，必定触发刷新。")]
@@ -41,7 +42,7 @@ public class BoardManager : MonoBehaviour
     [Tooltip("每次刷新时尝试将空格子变为障碍物的百分比。")]
     [Range(0f, 1f)]
     [SerializeField] private float obstacleAdditionRate = 0.1f;
-    [Header("对象池")]
+    //[Header("对象池")]
     //public PiecePool enemyPool; // 敌人池，用于存放生成的敌人预制体
     private Dictionary<Vector2Int, Piece> _pieceDict = new();
     // 棋盘上棋子的字典
@@ -170,6 +171,7 @@ public class BoardManager : MonoBehaviour
             AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到_friendlyPieces列表并设置到棋盘上
         }
         UpdateEachPieceMove(); // 更新每个棋子的移动次数
+        UpdateGlobalInfoText();
     }
     // --- 生成初始障碍物集合的方法 --- (此方法在 InitializeBoard 中不再被调用，但先保留)
     private void GenerateInitialObstacles()
@@ -790,6 +792,7 @@ public class BoardManager : MonoBehaviour
     public void StartNewTurn()
     {
         _currentTurn++;
+        UpdateGlobalInfoText();
         // --- 在每回合开始时更新障碍物 ---
         // 从第三回合开始才有可能出现障碍
         if (_currentTurn >= 3)
@@ -812,6 +815,7 @@ public class BoardManager : MonoBehaviour
     {
         StartCoroutine(EnemyTurnCoroutine());
     }
+    
     public void UpdateEachPieceMove()
     {
         foreach (var piece in _friendlyPieces)
@@ -1084,5 +1088,9 @@ public class BoardManager : MonoBehaviour
             }
         }
         return adjacentPieces;
+    }
+
+    private void UpdateGlobalInfoText() {
+        globalInfoUI.UpdateInfoText(_currentTurn,_newPieceCountdown,_enemiesPerTurn);
     }
 }

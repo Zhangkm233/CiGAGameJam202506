@@ -16,6 +16,8 @@ public class PieceInfoUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI personalityNameText; // 性格名称
     [SerializeField] private TextMeshProUGUI positiveEffectText; // 满足/积极效果
     [SerializeField] private TextMeshProUGUI negativeEffectText; // 痛苦/悲伤效果
+    [SerializeField] private TextMeshProUGUI newPiece; // 痛苦/悲伤效果
+    [SerializeField] private Sprite[] personalityIcons; // 性格图标数组（如果有多个性格图标）
 
     private void Awake()
     {
@@ -76,7 +78,8 @@ public class PieceInfoUI : MonoBehaviour
 
         // --- 填充基础信息 ---
         pieceNameText.text = GetPieceTypeName(piece.Type); // 显示棋子类型
-        // pieceIconImage.sprite = ... // 在这里可以根据piece.Type设置不同的棋子图片
+        pieceIconImage.sprite = personalityIcons[(int)piece.CurrentMood.CurrentMoodLevel]; // 显示棋子图标
+        pieceIconImage.SetNativeSize(); // 设置图标大小为原始大小
         movementText.text = $"可移动次数: {piece.CurrentMovementCount}/{piece.OriginMovementCount}";
         moodText.text = $"心情: {ConvertMoodLevelToString(piece.CurrentMood.CurrentMoodLevel)}";
         personalityNameText.text = $"性格: {piece.PiecePersonality.PersonalityName}";
@@ -86,36 +89,36 @@ public class PieceInfoUI : MonoBehaviour
         switch (piece.PiecePersonality.PersonalityName)
         {
             case "乐观主义":
-                positiveEffectText.text = "乐观满足效果：在回合开始时，相邻4格内的棋子的可移动次数+1";
-                negativeEffectText.text = "乐观痛苦效果：无法吃掉敌人棋子。";
+                positiveEffectText.text = "满足效果：在回合开始时，相邻4格内的棋子的可移动次数+1";
+                negativeEffectText.text = "痛苦效果：无法吃掉敌人棋子。";
                 break;
             case "悲观主义":
-                positiveEffectText.text = "悲观满足效果：无法吃掉敌人棋子";
-                negativeEffectText.text = "悲观痛苦效果：自身的可选择的移动范围增加自身3x3范围";
+                positiveEffectText.text = "满足效果：无法吃掉敌人棋子";
+                negativeEffectText.text = "痛苦效果：自身的可选择的移动范围增加自身3x3范围";
                 break;
             case "外向":
-                positiveEffectText.text = "外向满足效果：在回合开始时，自身可移动次数+1";
-                negativeEffectText.text = "外向痛苦效果：无法移动";
+                positiveEffectText.text = "满足效果：在回合开始时，自身可移动次数+1";
+                negativeEffectText.text = "痛苦效果：无法移动";
                 break;
             case "内向":
-                positiveEffectText.text = "内向满足效果：在回合开始时，相邻4格内的棋子的心情-1";
-                negativeEffectText.text = "内向痛苦效果：自身的可选择的移动范围增加自身3x3范围";
+                positiveEffectText.text = "满足效果：在回合开始时，相邻4格内的棋子的心情-1";
+                negativeEffectText.text = "痛苦效果：自身的可选择的移动范围增加自身3x3范围";
                 break;
             case "完美主义":
-                positiveEffectText.text = "完美主义满足效果：在回合开始时，心情-3，全场的棋子可移动次数+1";
-                negativeEffectText.text = "完美主义痛苦效果：在回合开始时，消灭该棋子";
+                positiveEffectText.text = "满足效果：在回合开始时，心情-3，全场的棋子可移动次数+1";
+                negativeEffectText.text = "痛苦效果：在回合开始时，消灭该棋子";
                 break;
             case "务实":
-                positiveEffectText.text = "务实满足效果：在回合开始时，自身可移动次数+2";
-                negativeEffectText.text = "务实痛苦效果：在吃掉一个棋子后，心情+2";
+                positiveEffectText.text = "满足效果：在回合开始时，自身可移动次数+2";
+                negativeEffectText.text = "痛苦效果：在吃掉一个棋子后，心情+2";
                 break;
             case "利他主义":
-                positiveEffectText.text = "利他主义满足效果：在回合开始时，使3x3的所有棋子心情+1";
-                negativeEffectText.text = "利他主义痛苦效果：在吃掉一个棋子后，自身可移动次数-1";
+                positiveEffectText.text = "满足效果：在回合开始时，使3x3的所有棋子心情+1";
+                negativeEffectText.text = "痛苦效果：在吃掉一个棋子后，自身可移动次数-1";
                 break;
             case "淡然":
-                positiveEffectText.text = "淡然满足效果：无";
-                negativeEffectText.text = "淡然痛苦效果：在回合开始时，自身可移动次数-1";
+                positiveEffectText.text = "满足效果：无";
+                negativeEffectText.text = "痛苦效果：在回合开始时，自身可移动次数-1";
                 break;
             default:
                 positiveEffectText.text = " ";
