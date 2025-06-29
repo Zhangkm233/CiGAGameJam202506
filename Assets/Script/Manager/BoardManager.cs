@@ -1011,15 +1011,18 @@ public class BoardManager : MonoBehaviour
     private void ProcessTurnEnd()
     {
         // 对所有友方棋子调用回合开始
-        foreach (var piece in _friendlyPieces)
+        // 通过.ToArray()创建一个_friendlyPieces副本，确保在遍历时原始集合不会被修改。
+        foreach (var piece in _friendlyPieces.ToArray())
         {
             if (piece != null)
             {
                 piece.OnTurnStart();
             }
         }
-        // 对所有友方棋子调用回合结束
-        foreach (var piece in _friendlyPieces)
+
+        // 再次创建副本，以防 OnTurnStart 间接导致了原始列表的修改
+        // 或者因为 OnTurnEnd 也可能导致修改？
+        foreach (var piece in _friendlyPieces.ToArray())
         {
             if (piece != null)
             {
