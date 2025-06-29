@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
 public class BoardManager : MonoBehaviour
 {
-    public static BoardManager Instance { get; private set; }
+    public static BoardManager Instance
+    {
+        get; private set;
+    }
     [SerializeField] private int boardWidth = GameData.mapWidth;
     [SerializeField] private int boardHeight = GameData.mapHeight;
     [SerializeField] public Vector3 boardOrigin = Vector3.zero;
@@ -28,14 +31,17 @@ public class BoardManager : MonoBehaviour
     public List<Personality> pawnPersonalities;
     [Header("游戏控制器")]
     public AudioController audioController; // 音频控制器引用，用于播放音效
-    public GlobalInfoUI globalInfoUI; // 全局信息UI引用，用于显示回合数等信息
+    public GlobalInfoUI globalInfoUI;
+    // 全局信息UI引用，用于显示回合数等信息
     // --- 障碍物设置 ---
     [Header("障碍物设置")]
     [Tooltip("在回合开始时刷新障碍物的概率（0到1）。当障碍物数量超过限制时，必定触发刷新。")]
     [Range(0f, 1f)]
-    [SerializeField] private float obstacleRefreshChancePerTurn = 0.33f; // 修改为 33%
+    [SerializeField] private float obstacleRefreshChancePerTurn = 0.33f;
+    // 修改为 33%
     [Tooltip("游戏开始时生成的初始障碍物数量。")]
-    [SerializeField] private int initialObstacleCount = 0; // 修改为 0，初始不生成障碍
+    [SerializeField] private int initialObstacleCount = 0;
+    // 修改为 0，初始不生成障碍
     [Tooltip("每次刷新时尝试移除的现有障碍物的百分比。")]
     [Range(0f, 1f)]
     [SerializeField] private float obstacleRemovalRate = 0.2f;
@@ -68,7 +74,6 @@ public class BoardManager : MonoBehaviour
     // 鼠标输入相关
     private Piece _selectedPiece = null;
     private Camera _camera;
-
     private void Awake()
     {
         if (Instance == null)
@@ -137,7 +142,7 @@ public class BoardManager : MonoBehaviour
                 tile.SetObstacle(false); // 确保重置障碍物状态
             }
         }
-        // 初始不生成障碍物，移除 GenerateInitialObstacles() 的调用
+        // 初始不生成障碍物，移除GenerateInitialObstacles()的调用
         // 重置游戏状态
         _currentTurn = 1;
         _newPieceCountdown = 3;
@@ -171,7 +176,8 @@ public class BoardManager : MonoBehaviour
             pawnPiece.InitializePiece(pawnPersonality, pawnPos);
             AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到_friendlyPieces列表并设置到棋盘上
         }
-        UpdateEachPieceMove(); // 更新每个棋子的移动次数
+        UpdateEachPieceMove();
+        // 更新每个棋子的移动次数
         UpdateGlobalInfoText();
     }
     // --- 生成初始障碍物集合的方法 --- (此方法在 InitializeBoard 中不再被调用，但先保留)
@@ -216,7 +222,6 @@ public class BoardManager : MonoBehaviour
             // 确保我们不会重复选择同一个图块
         }
     }
-
     // --- 在棋盘上随机更新障碍物的方法 ---
     private void UpdateObstacles()
     {
@@ -237,7 +242,7 @@ public class BoardManager : MonoBehaviour
         int totalPieceCount = _friendlyPieces.Count + _enemyPieces.Count;
         int maxFromPieceConstraint = (boardWidth * boardHeight) - (totalPieceCount * 2);
         int maxFromBoardFractionConstraint = (boardWidth * boardHeight) / 3;
-        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint, 20);
+        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint, 15);
         // 计算当前棋盘上所有障碍物的总数
         int actualTotalObstacleCount = 0;
         foreach (var tile in _tileDict.Values) // 使用缓存的_tileDict
@@ -281,11 +286,9 @@ public class BoardManager : MonoBehaviour
             // 如果已达到允许的最大障碍物数量，则停止添加
             if (actualTotalObstacleCount >= maxTotalObstacles) break;
             if (unoccupiedNormalTiles.Count == 0) break; // 如果没有空闲的正常格子了，则停止
-
             // 尝试寻找一个不会使棋盘断开的格子
             List<Tile> shuffledNormalTiles = unoccupiedNormalTiles.OrderBy(x => Random.value).ToList();
             Tile tileToSet = null;
-
             foreach (Tile candidateTile in shuffledNormalTiles)
             {
                 // 在放置之前，检查它是否会使棋盘断开
@@ -295,13 +298,15 @@ public class BoardManager : MonoBehaviour
                     break;
                 }
             }
-
             if (tileToSet != null)
             {
-                tileToSet.SetObstacle(true); // 将正常格子变为障碍物
+                tileToSet.SetObstacle(true);
+                // 将正常格子变为障碍物
                 unoccupiedObstacleTiles.Add(tileToSet);
-                unoccupiedNormalTiles.Remove(tileToSet); // 从列表中移除该特定图块
-                actualTotalObstacleCount++; // 更新实际障碍物总数
+                unoccupiedNormalTiles.Remove(tileToSet);
+                // 从列表中移除该特定图块
+                actualTotalObstacleCount++;
+                // 更新实际障碍物总数
             }
             else
             {
@@ -311,18 +316,15 @@ public class BoardManager : MonoBehaviour
             }
         }
     }
-
     // 辅助方法：检查在指定位置放置障碍物后棋盘是否仍然连通
     private bool IsBoardConnectedAfterPlacingObstacle(Vector2Int proposedObstaclePos)
     {
         // 临时将建议的位置标记为障碍物
         Tile proposedTile = GetTileAtPosition(proposedObstaclePos);
         if (proposedTile == null) return true;
-
         bool originalObstacleState = proposedTile.isObstacle;
-        
-        proposedTile.SetObstacle(true);
 
+        proposedTile.SetObstacle(true);
         // 寻找BFS/DFS的起始点，该点不能是建议的障碍物位置且不是现有障碍物
         Vector2Int startPos = Vector2Int.zero;
         bool startPosFound = false;
@@ -335,36 +337,30 @@ public class BoardManager : MonoBehaviour
                 break;
             }
         }
-
         // 如果没有找到有效的起始点则视为连通
         if (!startPosFound)
         {
-            
-            proposedTile.SetObstacle(originalObstacleState); // 恢复临时更改
+
+            proposedTile.SetObstacle(originalObstacleState);
+            // 恢复临时更改
             return true;
         }
-
         // 执行BFS以计算可达的非障碍物图块数量
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
         HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-
         queue.Enqueue(startPos);
         visited.Add(startPos);
-
         while (queue.Count > 0)
         {
             Vector2Int currentPos = queue.Dequeue();
-
             Vector2Int[] directions = {
                 new Vector2Int(0, 1), new Vector2Int(0, -1), // 上, 下
                 new Vector2Int(1, 0), new Vector2Int(-1, 0)  // 右, 左
             };
-
             foreach (Vector2Int dir in directions)
             {
                 Vector2Int neighborPos = currentPos + dir;
                 Tile neighborTile = GetTileAtPosition(neighborPos);
-
                 if (IsInBounds(neighborPos) && neighborTile != null && !neighborTile.isObstacle && !visited.Contains(neighborPos))
                 {
                     queue.Enqueue(neighborPos);
@@ -372,7 +368,6 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-
         // 计算临时放置障碍物后，总的非障碍物图块数量
         int totalNonObstacleTiles = 0;
         foreach (var kvp in _tileDict)
@@ -382,14 +377,11 @@ public class BoardManager : MonoBehaviour
                 totalNonObstacleTiles++;
             }
         }
-
-        proposedTile.SetObstacle(originalObstacleState); // 恢复临时更改
-
+        proposedTile.SetObstacle(originalObstacleState);
+        // 恢复临时更改
         // 如果访问到的图块数量等于总的非障碍物图块数量，则棋盘是连通的
         return visited.Count == totalNonObstacleTiles;
     }
-
-
     // 处理鼠标输入
     private void HandleMouseInput()
     {
@@ -478,13 +470,10 @@ public class BoardManager : MonoBehaviour
         Piece targetPiece = GetPieceAtPosition(targetPos);
         // 检查目标位置是否是友方棋子，如果是，则为无效移动
         if (targetPiece != null && targetPiece.Type != Piece.PieceType.Enemy) return;
-
-
-        // 不再过早进入PieceAttackingState。
+        // 不再过早进入PieceAttackingState
         piece.StateMachine?.ChangeState(new PieceMovingState(piece, targetPos));
-
         // 直接调用MovePiece，该方法现在负责处理数据更新和启动动画
-        MovePiece(piece, targetPos); 
+        MovePiece(piece, targetPos);
     }
     // 获取指定棋盘坐标上的棋子
     public Piece GetPieceAtPosition(Vector2Int pos)
@@ -496,71 +485,66 @@ public class BoardManager : MonoBehaviour
     public void AddPiece(Piece piece, Vector2Int pos)
     {
         if (piece == null) return;
-
         // 获取棋子最终要落到的世界坐标
         Vector3 targetWorldPosition = GetWorldPosition(pos);
-
         if (_pieceDict.ContainsKey(pos) && _pieceDict[pos] != piece)
         {
             Debug.LogWarning($"尝试将棋子 {piece.name} 放置到已被棋子 {_pieceDict[pos].name} 占用的位置 {pos}。操作取消。");
             // 如果目标位置已被其他棋子占用，则直接返回，不进行任何操作
             return;
         }
-        float fallHeight = 10f; // 调整下落起始高度
+        float fallHeight = 10f;
+        // 调整下落起始高度
         Vector3 startFallPosition = targetWorldPosition + Vector3.up * fallHeight;
-        
         Sequence sequence = DOTween.Sequence();
         float fallDuration = 0.5f; // 下落动画时长
-        float bounceHeight = 0.5f; // 落地反弹高度
-        float bounceDuration = 0.15f; // 反弹动画时长
-
+        float bounceHeight = 0.5f;
+        // 落地反弹高度
+        float bounceDuration = 0.15f;
+        // 反弹动画时长
         // 检查棋子是否已经“生成”过
         if (!piece.hasBeenSpawned) // 如果是第一次放置/生成这个棋子
         {
-            piece.transform.position = startFallPosition; // 将棋子设置到高处
-
+            piece.transform.position = startFallPosition;
+            // 将棋子设置到高处
             // 1. 棋子从高处落到目标位置上方一点
             sequence.Append(piece.transform.DOMove(targetWorldPosition + Vector3.up * bounceHeight, fallDuration).SetEase(Ease.OutQuad));
-
             // 2. 棋子落地后轻微反弹到最终位置
             sequence.Append(piece.transform.DOMove(targetWorldPosition, bounceDuration).SetEase(Ease.OutSine));
-
             piece.hasBeenSpawned = true;
         }
-
         // 3. 动画完成后执行的逻辑 (将棋子数据正式添加到棋盘)
         sequence.OnComplete(() =>
         {
             _pieceDict[pos] = piece;
             piece.BoardPosition = pos;
-
             // 添加到对应列表
             if (piece.Type == Piece.PieceType.Enemy)
             {
+
                 Debug.Log($"添加敌方棋子: {piece.name} at {pos}");
                 _enemyPieces.Add(piece);
             }
             else
             {
                 Debug.Log($"添加友方棋子: {piece.name} at {pos}");
+
                 _friendlyPieces.Add(piece);
             }
-
             // 关联Tile
             Tile tile = GetTileAtPosition(pos);
             if (tile != null)
             {
                 tile.unitOccupied = piece;
-                // 如果在动画开始时隐藏了棋子，这里需要重新启用
-                // 例如：piece.GetComponent<Renderer>().enabled = true;
+
             }
             // 播放落子音效
             if (audioController != null)
             {
                 audioController.PlayDropPiece();
+
             }
             Debug.Log($"棋子 {piece.name} 已成功生成在棋盘位置 {pos}");
-
         });
     }
     // 从棋盘移除棋子
@@ -577,7 +561,7 @@ public class BoardManager : MonoBehaviour
                 if (IsPuttingBackToPool)
                 {
                     enemyPool.ReturnEnemy(piece.gameObject);
-                }
+}
                 */
             }
             else
@@ -657,16 +641,13 @@ public class BoardManager : MonoBehaviour
     {
         if (piece == null) return;
         Vector2Int oldPos = piece.BoardPosition;
-
         // 在操作棋盘数据前，先获取目标位置上可能存在的敌方棋子
         Piece targetPiece = GetPieceAtPosition(targetPos);
-
         // 更新棋盘数据：从旧位置的数据中移除棋子，并将其添加到新位置
         RemovePiece(oldPos, false);
-
         // 真正的攻击(吃子)逻辑，将在动画结束后的回调中执行。
-        piece.MovingAnimation(oldPos,targetPos,targetPiece,() => {
-            AddPiece(piece,targetPos);
+        piece.MovingAnimation(oldPos, targetPos, targetPiece, () => {
+            AddPiece(piece, targetPos);
             audioController.PlayDropPiece();
             piece.CurrentMovementCount--;
             UpdatePieceMove(piece);
@@ -677,11 +658,9 @@ public class BoardManager : MonoBehaviour
     {
         if (attacker == null || target == null) return;
         if (attacker == target) return;
-
         // 触发攻击逻辑
         target.StateMachine?.ChangeState(new PieceDeadState(target));
         Debug.Log($"攻击棋子: {attacker.name} 攻击 {target.name} 在位置 {target.BoardPosition}");
-
         RemovePiece(target.BoardPosition, true);
         // 检查是否攻击了将棋
         if (target.Type == Piece.PieceType.General)
@@ -781,6 +760,7 @@ public class BoardManager : MonoBehaviour
             Piece.PieceType.Cannon => cannonPrefab,
             Piece.PieceType.Elephant => elephantPrefab,
             Piece.PieceType.Horse => horsePrefab,
+
             Piece.PieceType.Rook => rookPrefab,
             _ => pawnPrefab
         };
@@ -822,7 +802,7 @@ public class BoardManager : MonoBehaviour
     {
         StartCoroutine(EnemyTurnCoroutine());
     }
-    
+
     public void UpdateEachPieceMove()
     {
         foreach (var piece in _friendlyPieces)
@@ -853,6 +833,7 @@ public class BoardManager : MonoBehaviour
             if (enemy != null)
             {
                 if (MoveEnemyTowardsGeneral(enemy))
+
                 {
                     yield return new WaitForSeconds(0.2f);
                 }
@@ -874,7 +855,6 @@ public class BoardManager : MonoBehaviour
     {
         // 增加回合数
         _currentTurn++;
-
         // 计算本回合应该出现的敌人数量
         int enemiesToSpawn = _enemiesPerTurn;
         if (_currentTurn <= 20) // 前20回合每回合增加一个
@@ -886,58 +866,47 @@ public class BoardManager : MonoBehaviour
             _enemiesPerTurn++;
             _enemiesPerTurn++;
         }
-
         // 获取可用的边缘位置（空的且不是障碍物）
         List<Vector2Int> availableEdgePositions = GetAvailableEdgePositions();
-
         // 如果需要生成的敌人数量大于可用位置数量，则减少生成的敌人数量
         if (enemiesToSpawn > availableEdgePositions.Count)
         {
             enemiesToSpawn = availableEdgePositions.Count;
             Debug.LogWarning($"由于可用边缘位置有限（只有 {availableEdgePositions.Count} 个），生成的敌人数量已减少到 {enemiesToSpawn}。");
         }
-
         // 在边缘位置生成敌人
         for (int i = 0; i < enemiesToSpawn && availableEdgePositions.Count > 0; i++)
         {
             int idx = Random.Range(0, availableEdgePositions.Count);
             Vector2Int pos = availableEdgePositions[idx];
             availableEdgePositions.RemoveAt(idx);
-
             GameObject enemyObj = Instantiate(enemyPrefab, GetWorldPosition(pos), Quaternion.identity, transform);
-
-
             // 设置敌人位置
             Piece enemyPiece = enemyObj.GetComponent<Piece>();
-            enemyPiece.InitializePiece(null, pos); 
-
+            enemyPiece.InitializePiece(null, pos);
             AddPiece(enemyPiece, pos);
         }
     }
-
     // 获取可用的边缘位置（空的且不是障碍物）
     private List<Vector2Int> GetAvailableEdgePositions()
     {
         List<Vector2Int> availableEdgePositions = new List<Vector2Int>();
         // 上下边缘
-        for (int x = 0; x < boardWidth; x++) 
+        for (int x = 0; x < boardWidth; x++)
         {
             Vector2Int topPos = new Vector2Int(x, boardHeight - 1);
             Vector2Int bottomPos = new Vector2Int(x, 0);
-
             // 检查是否是有效的棋盘位置，是否为空，且不是障碍物
             if (IsValidBoardPosition(topPos) && GetPieceAtPosition(topPos) == null && !IsObstacleTile(topPos))
                 availableEdgePositions.Add(topPos);
             if (IsValidBoardPosition(bottomPos) && GetPieceAtPosition(bottomPos) == null && !IsObstacleTile(bottomPos))
                 availableEdgePositions.Add(bottomPos);
         }
-
         // 左右边缘
         for (int y = 1; y < boardHeight - 1; y++) // 避免重复添加角落
         {
             Vector2Int leftPos = new Vector2Int(0, y);
             Vector2Int rightPos = new Vector2Int(boardWidth - 1, y);
-
             // 检查是否是有效的棋盘位置，是否为空，且不是障碍物
             if (IsValidBoardPosition(leftPos) && GetPieceAtPosition(leftPos) == null && !IsObstacleTile(leftPos))
                 availableEdgePositions.Add(leftPos);
@@ -946,7 +915,6 @@ public class BoardManager : MonoBehaviour
         }
         return availableEdgePositions;
     }
-
     // 检查给定位置的 Tile 是否是障碍物
     private bool IsObstacleTile(Vector2Int pos)
     {
@@ -959,9 +927,8 @@ public class BoardManager : MonoBehaviour
     {
         Vector2Int generalPos = GetGeneralPosition();
         Vector2Int enemyPos = enemy.BoardPosition;
-        
+
         Debug.Log($"Enemy {enemy.name} at {enemyPos} moving towards General at {generalPos} (Turn {_currentTurn})");
-        
         List<(Vector2Int pos, float distance)> potentialMoves = new List<(Vector2Int pos, float distance)>();
         // 仅上下左右
         Vector2Int[] directions = {
@@ -970,16 +937,15 @@ public class BoardManager : MonoBehaviour
             new Vector2Int(1, 0),   // Right
             new Vector2Int(-1, 0)   // Left
             // 移除了斜向移动的方向向量
+    
         };
-        
+
         foreach (Vector2Int dir in directions)
         {
             Vector2Int candidatePos = enemyPos + dir;
-           
             if (IsValidBoardPosition(candidatePos))
             {
                 Piece pieceAtCandidatePos = GetPieceAtPosition(candidatePos);
-                
                 if (pieceAtCandidatePos == null || pieceAtCandidatePos.Type != Piece.PieceType.Enemy)
                 {
                     float dist = Vector2Int.Distance(candidatePos, generalPos);
@@ -987,29 +953,27 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-        
+
         potentialMoves.Sort((a, b) => a.distance.CompareTo(b.distance));
         Vector2Int chosenTargetPos = Vector2Int.zero;
         bool foundMove = false;
-        
+
         if (potentialMoves.Count > 0)
         {
             chosenTargetPos = potentialMoves[0].pos;
-            
             foundMove = true;
         }
         if (foundMove)
         {
-            
+
             Debug.Log($"Enemy {enemy.name} from {enemyPos} calculated target position: {chosenTargetPos}. Distance to General: {Vector2Int.Distance(chosenTargetPos, generalPos)}");
-            
             MovePiece(enemy, chosenTargetPos);
-            return true; 
+            return true;
         }
         else
         {
             Debug.Log($"Enemy {enemy.name} at {enemyPos}: No valid move found towards General.");
-            return false; 
+            return false;
         }
     }
     // 处理新棋子倒计时
@@ -1047,10 +1011,10 @@ public class BoardManager : MonoBehaviour
         {
             if (piece != null)
             {
+
                 piece.OnTurnStart();
             }
         }
-
         // 再次创建副本，以防 OnTurnStart 间接导致了原始列表的修改
         // 或者因为 OnTurnEnd 也可能导致修改？
         foreach (var piece in _friendlyPieces.ToArray())
@@ -1065,9 +1029,7 @@ public class BoardManager : MonoBehaviour
     private void GameOver()
     {
         Debug.Log("游戏结束！将棋被击败！");
-
         GameManager.Instance.TriggerGameOver();
-
         // 触发游戏结束UI
         // GameManager.Instance.ShowGameOverScreen();
     }
@@ -1131,8 +1093,8 @@ public class BoardManager : MonoBehaviour
         }
         return adjacentPieces;
     }
-
-    private void UpdateGlobalInfoText() {
-        globalInfoUI.UpdateInfoText(_currentTurn,_newPieceCountdown,_enemiesPerTurn);
+    private void UpdateGlobalInfoText()
+    {
+        globalInfoUI.UpdateInfoText(_currentTurn, _newPieceCountdown, _enemiesPerTurn);
     }
 }
