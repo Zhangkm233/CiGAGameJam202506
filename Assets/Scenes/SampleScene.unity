@@ -22883,7 +22883,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -22893,10 +22893,10 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 2693840048971433917, guid: cd18a8ca1e0063d4e8b8253f188ceea5, type: 3}
+    m_PressedSprite: {fileID: -7059378853978358287, guid: c96c6290436947746b0fe13205dc7f36, type: 3}
+    m_SelectedSprite: {fileID: 2693840048971433917, guid: cd18a8ca1e0063d4e8b8253f188ceea5, type: 3}
+    m_DisabledSprite: {fileID: -4436858978836171723, guid: cd18a8ca1e0063d4e8b8253f188ceea5, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
