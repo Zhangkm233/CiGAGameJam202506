@@ -57,7 +57,7 @@ public class Mood
         CurrentMoodLevel -= amount;
     }
 
-    // 根据棋子周围3x3范围内的友方棋子数量更新心情
+    // 根据棋子周围3x3和5x5范围内的友方棋子数量更新心情
     public void UpdateMoodBasedOnSurroundings(Vector2Int piecePosition)
     {
         if (BoardManager.Instance == null) return;
@@ -67,8 +67,18 @@ public class Mood
         // 计算友方棋子数量(不包括自身)
         int friendlyCount = surroundingPieces.Count(p => p.Type != Piece.PieceType.Enemy && p != _ownerPiece);
 
-        // e.g.心情随着周围友方棋子数量的增加而增加
-        CurrentMoodLevel += friendlyCount ; // 每个友方棋子增加1点心情
+        if (friendlyCount != 0)
+        {
+            CurrentMoodLevel += 1;
+        }
+
+        surroundingPieces = BoardManager.Instance.GetPiecesInRange(piecePosition, 2);
+        friendlyCount = surroundingPieces.Count(p => p.Type != Piece.PieceType.Enemy && p != _ownerPiece);
+        if (friendlyCount == 0)
+        {
+            CurrentMoodLevel -= 1;
+        }
+
         Debug.Log($"{_ownerPiece.Type} ({_ownerPiece.BoardPosition}) 周围有 {friendlyCount} 个友方棋子。心情更新为: {CurrentMoodLevel}");
     }
 

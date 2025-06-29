@@ -770,6 +770,7 @@ public class BoardManager : MonoBehaviour
     {
         StartCoroutine(EnemyTurnCoroutine());
     }
+    
     public void UpdateEachPieceMove()
     {
         foreach (var piece in _friendlyPieces)
