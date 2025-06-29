@@ -97,7 +97,7 @@ public abstract class Piece : MonoBehaviour
     }
 
     // 棋子平滑移动的动画 (修正为先放大 -> 移动 -> 缩小，并优化流畅度)
-    public void MovingAnimation(Vector2Int startPosition, Vector2Int targetPosition, Piece targetPiece)
+    public void MovingAnimation(Vector2Int startPosition, Vector2Int targetPosition, Piece targetPiece, System.Action onComplete = null)
     {
         // 防止旧的动画与新的动画发生冲突
         transform.DOKill(true);
@@ -125,6 +125,7 @@ public abstract class Piece : MonoBehaviour
             {
                 BoardManager.Instance.AttackPiece(this, targetPiece);
             }
+            onComplete?.Invoke();
         });
     }
 

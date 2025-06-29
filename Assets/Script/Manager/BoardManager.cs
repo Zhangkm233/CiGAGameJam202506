@@ -608,14 +608,13 @@ public class BoardManager : MonoBehaviour
 
         // 更新棋盘数据：从旧位置的数据中移除棋子，并将其添加到新位置
         RemovePiece(oldPos, false);
-        AddPiece(piece, targetPos);
 
         // 真正的攻击(吃子)逻辑，将在动画结束后的回调中执行。
-        piece.MovingAnimation(oldPos, targetPos, targetPiece);
-
-        // 更新棋子的剩余移动次数
-        piece.CurrentMovementCount--;
-        UpdatePieceMove(piece);
+        piece.MovingAnimation(oldPos,targetPos,targetPiece,() => {
+            AddPiece(piece,targetPos);
+            piece.CurrentMovementCount--;
+            UpdatePieceMove(piece);
+        });
     }
     // 棋子攻击（用于状态机调用）
     public void AttackPiece(Piece attacker, Piece target)
