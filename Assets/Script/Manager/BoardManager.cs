@@ -621,7 +621,7 @@ public class BoardManager : MonoBehaviour
         RemovePiece(target.BoardPosition, true);
         // 敌方棋子被攻击后回池
         // 检查是否攻击了将棋
-        if (target.Type == Piece.PieceType.Pawn && IsGeneral(target)) // 假设将棋也是Pawn类型但有特殊标记
+        if (target.Type == Piece.PieceType.General)
         {
             GameOver();
         }
@@ -684,7 +684,7 @@ public class BoardManager : MonoBehaviour
     {
         foreach (var piece in _friendlyPieces)
         {
-            if (IsGeneral(piece))
+            if (piece.Type == Piece.PieceType.General)
             {
                 return piece.BoardPosition;
             }

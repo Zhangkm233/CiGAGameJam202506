@@ -117,9 +117,6 @@ public class PieceInfoUI : MonoBehaviour
                 positiveEffectText.text = "淡然满足效果：无";
                 negativeEffectText.text = "淡然痛苦效果：在回合开始时，自身可移动次数-1";
                 break;
-                positiveEffectText.text = "利他主义满足效果：在回合开始时，使3x3的所有棋子心情+1";
-                negativeEffectText.text = "利他主义痛苦效果：在吃掉一个棋子后，自身可移动次数-1";
-                break;
                 // ... 在此添加其他性格的描述
 
         }
@@ -156,10 +153,10 @@ public class PieceInfoUI : MonoBehaviour
     // 将心情数值转换为文字描述
     private string ConvertMoodLevelToString(int moodLevel)
     {
-        if (moodLevel <= 1) return "痛苦";       // 五个等级0-10数值范围，简单映射
-        if (moodLevel <= 3) return "悲伤";
-        if (moodLevel <= 6) return "平淡";
-        if (moodLevel <= 8) return "欣喜";
-        return "积极";
+        if (moodLevel < 1) return "痛苦";       // 五个等级0-5数值范围，简单映射
+        if (moodLevel < 2) return "悲伤";
+        if (moodLevel < 3) return "平淡";
+        if (moodLevel < 4) return "欣喜";
+        return "满足";
     }
 }
