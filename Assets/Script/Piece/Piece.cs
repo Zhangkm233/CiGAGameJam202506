@@ -86,43 +86,37 @@ public abstract class Piece : MonoBehaviour
     }
 
     // 棋子平滑移动的动画 (修正为先放大 -> 移动 -> 缩小，并优化流畅度)
-    public void MovingAnimation(Vector2Int startPosition, Vector2Int targetPosition)
+    public void MovingAnimation(Vector2Int startPosition, Vector2Int targetPosition, Piece targetPiece)
     {
         // 防止旧的动画与新的动画发生冲突
-        transform.DOKill(true); // true表示也杀死子物体的Tween，以防Canvas等也有Tween
-
+        transform.DOKill(true);
         Sequence sequence = DOTween.Sequence();
 
-        // 定义动画时长
-        float scaleTransitionDuration = 0.2f; // 缩放动画的时长
-        float totalMoveDuration = 0.6f;      // 整体移动动画的总时长 (可以根据需要调整，让缩放和移动融合得更好)
-
-        // 1. 放大动画：在移动动画开始时并行播放，并快速完成
-        // 使用Insert方法，让scaleUpTweener从序列的0秒开始播放
+        // (此部分动画定义代码保持不变)
+        float scaleTransitionDuration = 0.2f;
+        float totalMoveDuration = 0.6f;
         Tweener scaleUpTweener = transform.DOScale(1.6f, scaleTransitionDuration)
-                                          .SetEase(Ease.OutSine); // 使用更平滑的Sine缓动
-
-        // 2. 移动动画：作为序列的主体，定义整体持续时间
+                                          .SetEase(Ease.OutSine);
         Tweener moveTweener = transform.DOMove(BoardManager.Instance.GetWorldPosition(targetPosition), totalMoveDuration)
-                                       .SetEase(Ease.InOutSine); // 使用更平滑的Sine缓动
-
-        // 3. 缩小动画：在移动动画即将结束时并行播放，并在移动结束时完成
-        // 使用Insert方法，让scaleDownTweener在moveTweener即将结束时开始
+                                       .SetEase(Ease.InOutSine);
         Tweener scaleDownTweener = transform.DOScale(1.0f, scaleTransitionDuration)
-                                            .SetEase(Ease.OutSine); // 使用更平滑的Sine缓动
-
-        // 构建序列
-        sequence.Append(moveTweener); // 首先将移动动画添加到序列中，作为主线
-
-        // 将放大动画插入到序列的开始（时间0），与移动动画并行
+                                            .SetEase(Ease.OutSine);
+        sequence.Append(moveTweener);
         sequence.Insert(0, scaleUpTweener);
-
-        // 将缩小动画插入到移动动画结束前开始，与移动动画的尾部并行
-        // 确保缩小动画在总移动时间结束时完成
         sequence.Insert(totalMoveDuration - scaleTransitionDuration, scaleDownTweener);
 
-        // 可以在序列完成时添加一个回调，以确保在动画结束后执行任何清理或逻辑
-        // 例如：sequence.OnComplete(() => Debug.Log("移动动画完成！"));
+        // 【新增】为动画序列添加 OnComplete 回调函数
+        // 这个回调函数会在整个动画序列播放完毕后自动执行
+        sequence.OnComplete(() =>
+        {
+            // 检查是否存在目标棋子 (即本次移动是一次攻击)
+            if (targetPiece != null)
+            {
+                // 调用 BoardManager 中的 AttackPiece 方法来处理吃子逻辑
+                // 此时，移动动画已经完成，攻击方棋子已经“落下”，视觉效果正确
+                BoardManager.Instance.AttackPiece(this, targetPiece);
+            }
+        });
     }
 
     // 处理棋子攻击另一个目标棋子的逻辑。此方法仅包含攻击动画/音效触发等，实际吃子和移除由BoardManager处理。
