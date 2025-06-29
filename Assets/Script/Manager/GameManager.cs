@@ -99,19 +99,31 @@ public class GameManager : MonoBehaviour
     #region 游戏状态类
 
     // --- MainMenuState:主菜单状态 ---
-    public class MainMenuState : GameState
-    {
+    public class MainMenuState : GameState {
         private GameManager _manager;
         public MainMenuState(GameManager manager) { _manager = manager; }
 
-        public override void OnEnter()
-        {
+        public override void OnEnter() {
             Debug.Log("进入状态：主菜单");
             // 激活主菜单UI，关闭其他UI
             if (_manager.mainMenuPanel != null) _manager.mainMenuPanel.SetActive(true);
             if (_manager.gamePanel != null) _manager.gamePanel.SetActive(false);
             if (_manager.gameOverPanel != null) _manager.gameOverPanel.SetActive(false);
             if (_manager.teamInfoPanel != null) _manager.teamInfoPanel.SetActive(false);
+            TransitionToGame();
+        }
+        private void TransitionToGame() {
+            Sequence sequence = DOTween.Sequence();
+            float animationDuration = 0.5f; // 假设UI动画持续时间为0.5秒，根据你的动画实际时长调整
+
+            if (_manager.mainMenuAnimator != null) {
+                _manager.mainMenuAnimator.Play("MoveIn");
+                sequence.AppendInterval(animationDuration); // 等待动画播放完毕的时间
+            } else {
+                // 如果没有Animator，也需要一个等待时间，否则逻辑会立即执行
+                sequence.AppendInterval(animationDuration);
+            }
+
         }
     }
 
@@ -120,17 +132,29 @@ public class GameManager : MonoBehaviour
     {
         private GameManager _manager;
         public TeamInfoState(GameManager manager) { _manager = manager; }
-        public override void OnEnter()
-        {
+        public override void OnEnter() {
             Debug.Log("进入状态：团队介绍");
             if (_manager.mainMenuPanel != null) _manager.mainMenuPanel.SetActive(false);
             if (_manager.gamePanel != null) _manager.gamePanel.SetActive(false);
             if (_manager.gameOverPanel != null) _manager.gameOverPanel.SetActive(false);
             if (_manager.teamInfoPanel != null) _manager.teamInfoPanel.SetActive(true);
         }
-        public override void OnExit()
-        {
+        public override void OnExit() {
             if (_manager.teamInfoPanel != null) _manager.teamInfoPanel.SetActive(false);
+        }
+        private void TransitionToGame() {
+            Sequence sequence = DOTween.Sequence();
+            float animationDuration = 0.5f; // 假设UI动画持续时间为0.5秒，根据你的动画实际时长调整
+
+            // 1. 主界面快速向下移出
+            if (_manager.mainMenuAnimator != null) {
+                //_manager.mainMenuAnimator.SetTrigger("MoveOut"); // 触发Animator的"MoveOut"动画
+                _manager.mainMenuAnimator.Play("MoveOut");
+                sequence.AppendInterval(animationDuration); // 等待动画播放完毕的时间
+            } else {
+                // 如果没有Animator，也需要一个等待时间，否则逻辑会立即执行
+                sequence.AppendInterval(animationDuration);
+            }
         }
     }
 
@@ -227,6 +251,12 @@ public class GameManager : MonoBehaviour
                 // 2. 隐藏游戏界面，显示结束界面
                 if (_manager.gamePanel != null) _manager.gamePanel.SetActive(false);
                 if (_manager.gameOverPanel != null) _manager.gameOverPanel.SetActive(true);
+
+                //消灭所有棋子
+                GameObject[] pieces = GameObject.FindGameObjectsWithTag("PieceGameObject");
+                foreach (GameObject piece in pieces) {
+                    Destroy(piece);
+                }
             });
 
             // 3. 游戏结束界面快速上升

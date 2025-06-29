@@ -685,6 +685,7 @@ public class BoardManager : MonoBehaviour
         // 检查是否攻击了将棋
         if (target.Type == Piece.PieceType.General)
         {
+            Debug.LogAssertion($"将棋被攻击: {target.name} 在位置 {target.BoardPosition}");
             GameOver();
         }
     }
@@ -1031,6 +1032,9 @@ public class BoardManager : MonoBehaviour
     private void GameOver()
     {
         Debug.Log("游戏结束！将棋被击败！");
+
+        GameManager.Instance.TriggerGameOver();
+
         // 触发游戏结束UI
         // GameManager.Instance.ShowGameOverScreen();
     }
