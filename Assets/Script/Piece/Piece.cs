@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening; // 引入DoTween命名空间
+using System.Collections; 
 
 public abstract class Piece : MonoBehaviour
 {
@@ -16,10 +17,10 @@ public abstract class Piece : MonoBehaviour
         get { return _currentMovementCount; }
         set { _currentMovementCount = Mathf.Max(0, value); } // 确保移动次数不为负数
     }
-    public int OriginMovementCount 
+    public int OriginMovementCount
     {
         get { return _originMovementCount; }
-        set { _originMovementCount = Mathf.Max(0,value); } // 确保初始移动次数至少为1
+        set { _originMovementCount = Mathf.Max(0, value); } // 确保初始移动次数至少为1
     } // 初始移动次数
 
     // --- 心情和性格 ---
@@ -41,6 +42,10 @@ public abstract class Piece : MonoBehaviour
 
     public delegate void OnPieceAttackFinished(Piece attacker, Piece target);
     public static event OnPieceAttackFinished OnPieceAttackFinishedEvent; // 落子时刻触发
+
+    // 新增事件：当棋子移动动画完成后触发
+    // 这个事件应该在BoardManager中订阅和取消订阅，以避免内存泄漏
+    public event System.Action OnMoveAnimationCompleted;
 
     public virtual void Awake()
     {
@@ -66,9 +71,12 @@ public abstract class Piece : MonoBehaviour
         PiecePersonality = personality;
         BoardPosition = initialPosition;
         // 根据性格设置初始移动次数和初始心情
-        if(Type != PieceType.Enemy) {
+        if (Type != PieceType.Enemy)
+        {
             OriginMovementCount = GameData.GetRandomMovementCount(Type);
-        } else {
+        }
+        else
+        {
             OriginMovementCount = 1; // 敌人棋子的默认初始移动次数
         }
         CurrentMovementCount = OriginMovementCount;
@@ -91,42 +99,48 @@ public abstract class Piece : MonoBehaviour
     public abstract bool IsValidMove(Vector2Int targetPosition);
 
     // 执行棋子的内部位置更新。
+    // 这个方法只负责更新逻辑位置，动画由MovingAnimation负责
     public virtual void MoveTo(Vector2Int targetPosition)
     {
         BoardPosition = targetPosition; // 更新棋子的内部坐标
         Debug.Log($"{Type} 内部位置更新到 {BoardPosition}");
     }
 
-    // 棋子平滑移动的动画 (修正为先放大 -> 移动 -> 缩小，并优化流畅度)
+    // 棋子平滑移动的动画 (修正为先放大 -> 移动 -> 缩小，并在动画结束后触发事件)
     public void MovingAnimation(Vector2Int startPosition, Vector2Int targetPosition, Piece targetPiece, System.Action onComplete = null)
     {
-        // 防止旧的动画与新的动画发生冲突
         transform.DOKill(true);
         Sequence sequence = DOTween.Sequence();
 
-        // (此部分动画定义代码保持不变)
         float scaleTransitionDuration = 0.2f;
         float totalMoveDuration = 0.6f;
+
+        // 确保BoardManager.Instance是可访问的单例
+        Vector3 targetWorldPosition = BoardManager.Instance.GetWorldPosition(targetPosition);
+
         Tweener scaleUpTweener = transform.DOScale(1.6f, scaleTransitionDuration)
-                                          .SetEase(Ease.OutSine);
-        Tweener moveTweener = transform.DOMove(BoardManager.Instance.GetWorldPosition(targetPosition), totalMoveDuration)
+                                         .SetEase(Ease.OutSine);
+        Tweener moveTweener = transform.DOMove(targetWorldPosition, totalMoveDuration)
                                        .SetEase(Ease.InOutSine);
         Tweener scaleDownTweener = transform.DOScale(1.0f, scaleTransitionDuration)
                                             .SetEase(Ease.OutSine);
+
         sequence.Append(moveTweener);
         sequence.Insert(0, scaleUpTweener);
         sequence.Insert(totalMoveDuration - scaleTransitionDuration, scaleDownTweener);
 
         // 为动画序列添加 OnComplete 回调函数
-        // 会在整个动画序列播放完毕后自动执行
         sequence.OnComplete(() =>
         {
-            // 检查是否存在目标棋子 (即本次移动是一次攻击)
+            // 在动画完成时，先执行攻击逻辑
             if (targetPiece != null)
             {
                 BoardManager.Instance.AttackPiece(this, targetPiece);
             }
+            // 然后执行外部传入的 nComplete回调
             onComplete?.Invoke();
+            // 最后，触发棋子移动动画完成事件
+            OnMoveAnimationCompleted?.Invoke(); // 动画完成时触发事件
         });
     }
 
