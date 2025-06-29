@@ -7514,7 +7514,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u5927\u6C5F\u6CB3\\n\u5927\u8471\u68F1\u9C7C\u8C46\u8150\\n\u7F51\u53CB\u7F51\u987A\u53CB"
+  m_text: "\u5927\u6C5F\u6CB3\\n\u5927\u8471\u68F1\u9C7C\u8C46\u8150\\n\u7F51\u53CB\u7F51\u987A\u53CB\\nAns3L"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aed20965f0420e04f9b014f54596a1e0, type: 2}
   m_sharedMaterial: {fileID: 5811884605260280945, guid: aed20965f0420e04f9b014f54596a1e0, type: 2}
@@ -20601,6 +20601,7 @@ MonoBehaviour:
   enemySpawnPerTurn: {fileID: 626822687}
   RightSideGameruleInfo: {fileID: 891821988}
   LeftSideGameruleInfo: {fileID: 536674035}
+  EndInfo: {fileID: 0}
 --- !u!1 &1720217674
 GameObject:
   m_ObjectHideFlags: 0

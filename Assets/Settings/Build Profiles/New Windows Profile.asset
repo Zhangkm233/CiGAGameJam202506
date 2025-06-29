@@ -36,8 +36,8 @@ MonoBehaviour:
     - line: '|   targetDevice: 2'
     - line: '|   useOnDemandResources: 0'
     - line: '|   accelerometerFrequency: 60'
-    - line: '|   companyName: DefaultCompany'
-    - line: '|   productName: CiGAGameJam202506'
+    - line: '|   companyName: "\u653E\u8BFE\u540E\u8336\u4F1A"'
+    - line: '|   productName: "\u68CB\u5175\u5F08\u9635"'
     - line: '|   defaultCursor: {instanceID: 0}'
     - line: '|   cursorHotspot: {x: 0, y: 0}'
     - line: '|   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b:
@@ -315,7 +315,7 @@ MonoBehaviour:
     - line: '|   - m_BuildTarget: '
     - line: '|     m_Icons:'
     - line: '|     - serializedVersion: 2'
-    - line: '|       m_Icon: {fileID: 2800000, guid: 85ac55597b97403c82fc6601a93cf241,
+    - line: '|       m_Icon: {fileID: 2800000, guid: 972c104b249be664b83f3768d14e9df2,
         type: 3}'
     - line: '|       m_Width: 128'
     - line: '|       m_Height: 128'
