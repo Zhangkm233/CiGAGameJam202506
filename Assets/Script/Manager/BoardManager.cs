@@ -4,7 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-
+using DG.Tweening;
 public class BoardManager : MonoBehaviour
 {
     public static BoardManager Instance { get; private set; }
@@ -493,22 +493,67 @@ public class BoardManager : MonoBehaviour
     public void AddPiece(Piece piece, Vector2Int pos)
     {
         if (piece == null) return;
-        _pieceDict[pos] = piece;
-        piece.BoardPosition = pos;
-        // 添加到对应列表
-        if (piece.Type == Piece.PieceType.Enemy)
+
+        // 获取棋子最终要落到的世界坐标
+        Vector3 targetWorldPosition = GetWorldPosition(pos);
+
+
+        float fallHeight = 10f; // 调整下落起始高度
+        Vector3 startFallPosition = targetWorldPosition + Vector3.up * fallHeight;
+        
+        Sequence sequence = DOTween.Sequence();
+        float fallDuration = 0.5f; // 下落动画时长
+        float bounceHeight = 0.5f; // 落地反弹高度
+        float bounceDuration = 0.15f; // 反弹动画时长
+
+        // 检查棋子是否已经“生成”过
+        if (!piece.hasBeenSpawned) // 如果是第一次放置/生成这个棋子
         {
-            Debug.Log($"添加敌方棋子: {piece.name} at {pos}");
-            _enemyPieces.Add(piece);
+            piece.transform.position = startFallPosition; // 将棋子设置到高处
+
+            // 1. 棋子从高处落到目标位置上方一点
+            sequence.Append(piece.transform.DOMove(targetWorldPosition + Vector3.up * bounceHeight, fallDuration).SetEase(Ease.OutQuad));
+
+            // 2. 棋子落地后轻微反弹到最终位置
+            sequence.Append(piece.transform.DOMove(targetWorldPosition, bounceDuration).SetEase(Ease.OutSine));
+
+            piece.hasBeenSpawned = true;
         }
-        else
+
+        // 3. 动画完成后执行的逻辑 (将棋子数据正式添加到棋盘)
+        sequence.OnComplete(() =>
         {
-            Debug.Log($"添加友方棋子: {piece.name} at {pos}");
-            _friendlyPieces.Add(piece);
-        }
-        // 关联Tile
-        Tile tile = GetTileAtPosition(pos);
-        if (tile != null) tile.unitOccupied = piece;
+            _pieceDict[pos] = piece;
+            piece.BoardPosition = pos;
+
+            // 添加到对应列表
+            if (piece.Type == Piece.PieceType.Enemy)
+            {
+                Debug.Log($"添加敌方棋子: {piece.name} at {pos}");
+                _enemyPieces.Add(piece);
+            }
+            else
+            {
+                Debug.Log($"添加友方棋子: {piece.name} at {pos}");
+                _friendlyPieces.Add(piece);
+            }
+
+            // 关联Tile
+            Tile tile = GetTileAtPosition(pos);
+            if (tile != null)
+            {
+                tile.unitOccupied = piece;
+                // 如果在动画开始时隐藏了棋子，这里需要重新启用
+                // 例如：piece.GetComponent<Renderer>().enabled = true;
+            }
+            // 播放落子音效
+            if (audioController != null)
+            {
+                audioController.PlayDropPiece();
+            }
+            Debug.Log($"棋子 {piece.name} 已成功生成在棋盘位置 {pos}");
+
+        });
     }
     // 从棋盘移除棋子
     public void RemovePiece(Vector2Int pos, bool IsPuttingBackToPool)

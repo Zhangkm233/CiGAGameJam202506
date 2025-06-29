@@ -7,6 +7,7 @@ public abstract class Piece : MonoBehaviour
     // --- 棋子核心属性 ---
     public enum PieceType { Pawn, Cannon, Elephant, Horse, Rook, Enemy, General } // 枚举棋子类型
     public PieceType Type; // 当前棋子的具体类型
+    public bool hasBeenSpawned = false;//是否已经被生成过
 
     [SerializeField] private int _originMovementCount;
     [SerializeField] private int _currentMovementCount; // 当前回合剩余移动次数
