@@ -120,7 +120,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 328
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -169,7 +169,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u8868\u60C5_0"
+      name: "\u8868\u60C5_\u75DB\u82E6"
       rect:
         serializedVersion: 2
         x: 123
@@ -191,7 +191,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u8868\u60C5_1"
+      name: "\u8868\u60C5_\u60B2\u4F24"
       rect:
         serializedVersion: 2
         x: 957
@@ -199,7 +199,7 @@ TextureImporter:
         width: 700
         height: 700
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -213,15 +213,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u8868\u60C5_2"
+      name: "\u8868\u60C5_\u5E73\u6DE1"
       rect:
         serializedVersion: 2
         x: 1637
-        y: 154
+        y: 156
         width: 700
         height: 700
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -235,7 +235,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u8868\u60C5_3"
+      name: "\u8868\u60C5_\u6B23\u559C"
       rect:
         serializedVersion: 2
         x: 2501
@@ -243,7 +243,7 @@ TextureImporter:
         width: 714
         height: 712
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -257,7 +257,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u8868\u60C5_4"
+      name: "\u8868\u60C5_\u6EE1\u8DB3"
       rect:
         serializedVersion: 2
         x: 3285
@@ -265,7 +265,7 @@ TextureImporter:
         width: 700
         height: 750
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -292,10 +292,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u8868\u60C5_1": 539262125
-      "\u8868\u60C5_2": -546875841
-      "\u8868\u60C5_3": -301379992
-      "\u8868\u60C5_4": -2106579554
+      "\u8868\u60C5_\u5E73\u6DE1": -546875841
+      "\u8868\u60C5_\u60B2\u4F24": 539262125
+      "\u8868\u60C5_\u6B23\u559C": -301379992
+      "\u8868\u60C5_\u6EE1\u8DB3": -2106579554
+      "\u8868\u60C5_\u75DB\u82E6": -5124978321704844542
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
