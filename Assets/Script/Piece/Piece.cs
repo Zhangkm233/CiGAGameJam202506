@@ -105,26 +105,24 @@ public abstract class Piece : MonoBehaviour
         sequence.Insert(0, scaleUpTweener);
         sequence.Insert(totalMoveDuration - scaleTransitionDuration, scaleDownTweener);
 
-        // 【新增】为动画序列添加 OnComplete 回调函数
-        // 这个回调函数会在整个动画序列播放完毕后自动执行
+        // 为动画序列添加 OnComplete 回调函数
+        // 会在整个动画序列播放完毕后自动执行
         sequence.OnComplete(() =>
         {
             // 检查是否存在目标棋子 (即本次移动是一次攻击)
             if (targetPiece != null)
             {
-                // 调用 BoardManager 中的 AttackPiece 方法来处理吃子逻辑
-                // 此时，移动动画已经完成，攻击方棋子已经“落下”，视觉效果正确
                 BoardManager.Instance.AttackPiece(this, targetPiece);
             }
         });
     }
 
-    // 处理棋子攻击另一个目标棋子的逻辑。此方法仅包含攻击动画/音效触发等，实际吃子和移除由BoardManager处理。
+    // 处理棋子攻击另一个目标棋子的逻辑。此方法仅包含攻击动画/音效触发等，实际吃子和移除由BoardManager处理
     public virtual void Attack(Piece targetPiece)
     {
         Debug.Log($"{Type} 在 {BoardPosition} 攻击了 {targetPiece.Type} 在 {targetPiece.BoardPosition}");
         OnPieceAttackFinishedEvent?.Invoke(this, targetPiece); // 触发攻击完成事件
-        // 播放攻击动画、音效等，实际的棋子移除和死亡状态设置由 BoardManager.AttackPiece 处理
+        // 播放攻击动画、音效等
     }
 
     // 回合开始时调用的方法

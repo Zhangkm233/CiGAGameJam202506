@@ -473,10 +473,8 @@ public class BoardManager : MonoBehaviour
         // 检查目标位置是否是友方棋子，如果是，则为无效移动
         if (targetPiece != null && targetPiece.Type != Piece.PieceType.Enemy) return;
 
-    // 【核心修改】我们移除此处的状态切换逻辑。
-    // 不再过早地进入 PieceAttackingState。
-    // 无论移动还是攻击，棋子首先进入的都应该是“移动中”的状态。
-    // 您可以根据您的状态机设计保留或添加一个通用的移动状态切换，例如：
+
+    // 不再过早进入PieceAttackingState。
     piece.StateMachine?.ChangeState(new PieceMovingState(piece, targetPos));
 
     // 直接调用MovePiece，该方法现在负责处理数据更新和启动动画
@@ -600,14 +598,13 @@ public class BoardManager : MonoBehaviour
         if (piece == null) return;
         Vector2Int oldPos = piece.BoardPosition;
 
-        // 【修改】在操作棋盘数据前，先获取目标位置上可能存在的敌方棋子
+        // 在操作棋盘数据前，先获取目标位置上可能存在的敌方棋子
         Piece targetPiece = GetPieceAtPosition(targetPos);
 
         // 更新棋盘数据：从旧位置的数据中移除棋子，并将其添加到新位置
         RemovePiece(oldPos, false);
         AddPiece(piece, targetPos);
 
-        // 【核心修改】调用动画方法，并将目标棋子(targetPiece)作为参数传入。
         // 真正的攻击(吃子)逻辑，将在动画结束后的回调中执行。
         piece.MovingAnimation(oldPos, targetPos, targetPiece);
 
