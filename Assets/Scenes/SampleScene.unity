@@ -1860,7 +1860,7 @@ MonoBehaviour:
   horsePrefab: {fileID: 1177934276600195008, guid: b33d1597b659ff149bee3a01777dff60, type: 3}
   rookPrefab: {fileID: 6320015673575777528, guid: 2888bd8806a83cb4ea2b1a9865412e90, type: 3}
   enemyPrefab: {fileID: 6048917852243057827, guid: 0ac4cdfaf029b3840ad74348eb6dd72e, type: 3}
-  PersonalityGeneral: {fileID: 11400000, guid: 7bc51c211c733c04595a0ddfb49c5285, type: 2}
+  PersonalityGeneral: {fileID: 11400000, guid: 56576c69dddd52b45acb3794e6e0bde5, type: 2}
   pawnPersonalities:
   - {fileID: 11400000, guid: c8061109436818e4581555c45140fab7, type: 2}
   - {fileID: 11400000, guid: 214928e0472807645b9bca600429946f, type: 2}

@@ -167,6 +167,7 @@ public class BoardManager : MonoBehaviour
             pawnPiece.InitializePiece(pawnPersonality, pawnPos);
             AddPiece(pawnPiece, pawnPos); // 将卒棋子添加到_friendlyPieces列表并设置到棋盘上
         }
+        UpdateEachPieceMove(); // 更新每个棋子的移动次数
     }
     // --- 生成初始障碍物集合的方法 --- (此方法在 InitializeBoard 中不再被调用，但先保留)
     private void GenerateInitialObstacles()

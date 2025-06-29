@@ -8,12 +8,18 @@ public abstract class Piece : MonoBehaviour
     public enum PieceType { Pawn, Cannon, Elephant, Horse, Rook, Enemy, General } // 枚举棋子类型
     public PieceType Type; // 当前棋子的具体类型
 
+    [SerializeField] private int _originMovementCount;
     [SerializeField] private int _currentMovementCount; // 当前回合剩余移动次数
     public int CurrentMovementCount
     {
         get { return _currentMovementCount; }
         set { _currentMovementCount = Mathf.Max(0, value); } // 确保移动次数不为负数
     }
+    public int OriginMovementCount 
+    {
+        get { return _originMovementCount; }
+        set { _originMovementCount = Mathf.Max(0,value); } // 确保初始移动次数至少为1
+    } // 初始移动次数
 
     // --- 心情和性格 ---
     public Mood CurrentMood { get; private set; } // 棋子特有的心情实例
@@ -59,15 +65,20 @@ public abstract class Piece : MonoBehaviour
         PiecePersonality = personality;
         BoardPosition = initialPosition;
         // 根据性格设置初始移动次数和初始心情
+        if(Type != PieceType.Enemy) {
+            OriginMovementCount = GameData.GetRandomMovementCount(Type);
+        } else {
+            OriginMovementCount = 1; // 敌人棋子的默认初始移动次数
+        }
+        CurrentMovementCount = OriginMovementCount;
+
         if (personality != null) // 仅当性格存在时设置（例如，对于非敌人棋子）
         {
-            CurrentMovementCount = personality.BaseMovementCount;
             CurrentMood.SetInitialMood(personality.InitialMoodLevel);
         }
         else // 敌人或没有性格的棋子的默认值
         {
-            CurrentMovementCount = 1; // 敌人棋子的默认移动次数（如果没有性格）
-            CurrentMood.SetInitialMood(50); // 默认心情
+            CurrentMood.SetInitialMood(2); // 默认心情
         }
     }
 
@@ -131,7 +142,7 @@ public abstract class Piece : MonoBehaviour
         // 对于友方棋子，重置移动次数并应用性格效果
         if (Type != PieceType.Enemy)
         {
-            CurrentMovementCount = PiecePersonality.BaseMovementCount; // 重置本回合的移动次数
+            CurrentMovementCount = OriginMovementCount; // 重置本回合的移动次数
             CurrentMood.ApplyPersonalityEffectOnTurnStart(this); // 应用基于心情的性格效果
             Debug.Log($"{Type} 在 {BoardPosition} 回合开始。心情: {CurrentMood.CurrentMoodLevel}, 移动次数: {CurrentMovementCount}");
         }

@@ -77,7 +77,7 @@ public class PieceInfoUI : MonoBehaviour
         // --- 填充基础信息 ---
         pieceNameText.text = GetPieceTypeName(piece.Type); // 显示棋子类型
         // pieceIconImage.sprite = ... // 在这里可以根据piece.Type设置不同的棋子图片
-        movementText.text = $"可移动次数: {piece.CurrentMovementCount}/{piece.PiecePersonality.BaseMovementCount}";
+        movementText.text = $"可移动次数: {piece.CurrentMovementCount}/{piece.OriginMovementCount}";
         moodText.text = $"心情: {ConvertMoodLevelToString(piece.CurrentMood.CurrentMoodLevel)}";
         personalityNameText.text = $"性格: {piece.PiecePersonality.PersonalityName}";
 

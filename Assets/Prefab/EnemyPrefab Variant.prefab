@@ -150,4 +150,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 5
-  _currentMovementCount: 0
+  _originMovementCount: 1
+  _currentMovementCount: 1

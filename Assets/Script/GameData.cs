@@ -19,7 +19,8 @@ public static class GameData
         public static readonly Vector2Int Elephant = new Vector2Int(2, 5);  // 象：2-5
         public static readonly Vector2Int Horse = new Vector2Int(1, 4);     // 马：1-4
         public static readonly Vector2Int Rook = new Vector2Int(1, 1);      // 车：1
-        public static readonly Vector2Int General = new Vector2Int(0, 0);   // 将：0（不能移动）
+        public static readonly Vector2Int General = new Vector2Int(1, 1);   // 将：1
+        public static readonly Vector2Int Enemy = new Vector2Int(1,1);    // 敌人：1
     }
 
     // 心情等级
