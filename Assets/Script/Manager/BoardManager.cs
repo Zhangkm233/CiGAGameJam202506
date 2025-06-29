@@ -68,6 +68,7 @@ public class BoardManager : MonoBehaviour
     // 鼠标输入相关
     private Piece _selectedPiece = null;
     private Camera _camera;
+
     private void Awake()
     {
         if (Instance == null)
@@ -871,58 +872,87 @@ public class BoardManager : MonoBehaviour
     // 生成敌人
     private void SpawnEnemies()
     {
+        // 增加回合数
+        _currentTurn++;
+
         // 计算本回合应该出现的敌人数量
         int enemiesToSpawn = _enemiesPerTurn;
-        if (_currentTurn % 2 == 0 && _currentTurn <= 20) // 前20回合每两回合增加一个
+        if (_currentTurn <= 20) // 前20回合每回合增加一个
         {
             _enemiesPerTurn++;
         }
-        else if (_currentTurn > 20) // 20回合后每回合增加一个
+        else if (_currentTurn > 20) // 20回合后每回合增加2个
         {
             _enemiesPerTurn++;
+            _enemiesPerTurn++;
         }
+
+        // 获取可用的边缘位置（空的且不是障碍物）
+        List<Vector2Int> availableEdgePositions = GetAvailableEdgePositions();
+
+        // 如果需要生成的敌人数量大于可用位置数量，则减少生成的敌人数量
+        if (enemiesToSpawn > availableEdgePositions.Count)
+        {
+            enemiesToSpawn = availableEdgePositions.Count;
+            Debug.LogWarning($"由于可用边缘位置有限（只有 {availableEdgePositions.Count} 个），生成的敌人数量已减少到 {enemiesToSpawn}。");
+        }
+
         // 在边缘位置生成敌人
-        List<Vector2Int> edgePositions = GetEdgePositions();
-        for (int i = 0; i < enemiesToSpawn && edgePositions.Count > 0; i++)
+        for (int i = 0; i < enemiesToSpawn && availableEdgePositions.Count > 0; i++)
         {
-            int idx = Random.Range(0, edgePositions.Count);
-            Vector2Int pos = edgePositions[idx];
-            edgePositions.RemoveAt(idx);
-            /*GameObject enemyObj = enemyPool.GetEnemy();*/
+            int idx = Random.Range(0, availableEdgePositions.Count);
+            Vector2Int pos = availableEdgePositions[idx];
+            availableEdgePositions.RemoveAt(idx);
+
             GameObject enemyObj = Instantiate(enemyPrefab, GetWorldPosition(pos), Quaternion.identity, transform);
-            enemyObj.transform.position = GetWorldPosition(pos);
+
+
             // 设置敌人位置
             Piece enemyPiece = enemyObj.GetComponent<Piece>();
-            enemyPiece.InitializePiece(null, pos);
-            // 敌人不需要性格
+            enemyPiece.InitializePiece(null, pos); 
+
             AddPiece(enemyPiece, pos);
         }
     }
-    // 获取边缘位置
-    private List<Vector2Int> GetEdgePositions()
+
+    // 获取可用的边缘位置（空的且不是障碍物）
+    private List<Vector2Int> GetAvailableEdgePositions()
     {
-        List<Vector2Int> edgePositions = new();
+        List<Vector2Int> availableEdgePositions = new List<Vector2Int>();
         // 上下边缘
-        for (int x = 0; x < boardWidth; x++)
+        for (int x = 0; x < boardWidth; x++) 
         {
             Vector2Int topPos = new Vector2Int(x, boardHeight - 1);
             Vector2Int bottomPos = new Vector2Int(x, 0);
-            if (IsValidBoardPosition(topPos) && GetPieceAtPosition(topPos) == null)
-                edgePositions.Add(topPos);
-            if (IsValidBoardPosition(bottomPos) && GetPieceAtPosition(bottomPos) == null)
-                edgePositions.Add(bottomPos);
+
+            // 检查是否是有效的棋盘位置，是否为空，且不是障碍物
+            if (IsValidBoardPosition(topPos) && GetPieceAtPosition(topPos) == null && !IsObstacleTile(topPos))
+                availableEdgePositions.Add(topPos);
+            if (IsValidBoardPosition(bottomPos) && GetPieceAtPosition(bottomPos) == null && !IsObstacleTile(bottomPos))
+                availableEdgePositions.Add(bottomPos);
         }
+
         // 左右边缘
         for (int y = 1; y < boardHeight - 1; y++) // 避免重复添加角落
         {
             Vector2Int leftPos = new Vector2Int(0, y);
             Vector2Int rightPos = new Vector2Int(boardWidth - 1, y);
-            if (IsValidBoardPosition(leftPos) && GetPieceAtPosition(leftPos) == null)
-                edgePositions.Add(leftPos);
-            if (IsValidBoardPosition(rightPos) && GetPieceAtPosition(rightPos) == null)
-                edgePositions.Add(rightPos);
+
+            // 检查是否是有效的棋盘位置，是否为空，且不是障碍物
+            if (IsValidBoardPosition(leftPos) && GetPieceAtPosition(leftPos) == null && !IsObstacleTile(leftPos))
+                availableEdgePositions.Add(leftPos);
+            if (IsValidBoardPosition(rightPos) && GetPieceAtPosition(rightPos) == null && !IsObstacleTile(rightPos))
+                availableEdgePositions.Add(rightPos);
         }
-        return edgePositions;
+        return availableEdgePositions;
+    }
+
+    // 检查给定位置的 Tile 是否是障碍物
+    private bool IsObstacleTile(Vector2Int pos)
+    {
+        Tile tile = GetTileAtPosition(pos);
+        // 检查Tile是否存在且是障碍物
+        return tile != null && tile.isObstacle;
     }
     // 移动敌人朝向将棋
     private bool MoveEnemyTowardsGeneral(Piece enemy)
