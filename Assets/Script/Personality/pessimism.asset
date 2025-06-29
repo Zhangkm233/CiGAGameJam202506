@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pessimism
   m_EditorClassIdentifier: 
   PersonalityName: "\u60B2\u89C2\u4E3B\u4E49"
-  Description: "\u60B2\u89C2\u6EE1\u8DB3\u6548\u679C\uFF1A\u65E0\u6CD5\u5403\u6389\u654C\u4EBA\u68CB\u5B50\r\n\u60B2\u89C2\u75DB\u82E6\u6548\u679C\uFF1A\u81EA\u8EAB\u7684\u53EF\u9009\u62E9\u7684\u79FB\u52A8\u8303\u56F4\u589E\u52A0\u81EA\u8EAB3x3\u8303\u56F4\r\n"
+  Description: "\u60B2\u89C2\u6EE1\u8DB3\u6548\u679C\uFF1A\u65E0\u6CD5\u5403\u6389\u654C\u4EBA\u68CB\u5B50\r\n\u60B2\u89C2\u75DB\u82E6\u6548\u679C\uFF1A\u65E0\r\n"
   BaseMovementCount: 1
   InitialMoodLevel: 2
   MoodEffects:
@@ -24,14 +24,5 @@ MonoBehaviour:
     - Type: 6
       Value: 0
       Range: 0
-      TargetType: 0
-    OnTurnEndEffects: []
-  - EffectName: "\u60B2\u89C2\u75DB\u82E6\u6548\u679C"
-    MinMood: 0
-    MaxMood: 0
-    OnTurnStartEffects:
-    - Type: 2
-      Value: 0
-      Range: 3
       TargetType: 0
     OnTurnEndEffects: []

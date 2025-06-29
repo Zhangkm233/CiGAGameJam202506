@@ -94,7 +94,7 @@ public class PieceInfoUI : MonoBehaviour
                 break;
             case "悲观主义":
                 positiveEffectText.text = "满足效果：无法吃掉敌人棋子";
-                negativeEffectText.text = "痛苦效果：自身的可选择的移动范围增加自身3x3范围";
+                negativeEffectText.text = "痛苦效果：无";
                 break;
             case "外向":
                 positiveEffectText.text = "满足效果：在回合开始时，自身可移动次数+1";
@@ -102,7 +102,7 @@ public class PieceInfoUI : MonoBehaviour
                 break;
             case "内向":
                 positiveEffectText.text = "满足效果：在回合开始时，相邻4格内的棋子的心情-1";
-                negativeEffectText.text = "痛苦效果：自身的可选择的移动范围增加自身3x3范围";
+                negativeEffectText.text = "痛苦效果：在回合开始时，相邻4格内的棋子的可移动次数+1";
                 break;
             case "完美主义":
                 positiveEffectText.text = "满足效果：在回合开始时，心情-3，全场的棋子可移动次数+1";
@@ -110,11 +110,11 @@ public class PieceInfoUI : MonoBehaviour
                 break;
             case "务实":
                 positiveEffectText.text = "满足效果：在回合开始时，自身可移动次数+2";
-                negativeEffectText.text = "痛苦效果：在吃掉一个棋子后，心情+2";
+                negativeEffectText.text = "痛苦效果：在回合开始时，相邻4格内的棋子可移动次数+1";
                 break;
             case "利他主义":
                 positiveEffectText.text = "满足效果：在回合开始时，使3x3的所有棋子心情+1";
-                negativeEffectText.text = "痛苦效果：在吃掉一个棋子后，自身可移动次数-1";
+                negativeEffectText.text = "痛苦效果：无法移动";
                 break;
             case "淡然":
                 positiveEffectText.text = "满足效果：无";

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Altruism
   m_EditorClassIdentifier: 
   PersonalityName: "\u5229\u4ED6\u4E3B\u4E49"
-  Description: "\u5229\u4ED6\u4E3B\u4E49\u6EE1\u8DB3\u6548\u679C\uFF1A\u5728\u56DE\u5408\u5F00\u59CB\u65F6\uFF0C\u4F7F3x3\u7684\u6240\u6709\u68CB\u5B50\u5FC3\u60C5+1\r\n\u5229\u4ED6\u4E3B\u4E49\u75DB\u82E6\u6548\u679C\uFF1A\u5728\u5403\u6389\u4E00\u4E2A\u68CB\u5B50\u540E\uFF0C\u81EA\u8EAB\u53EF\u79FB\u52A8\u6B21\u6570-1\r\n"
+  Description: "\u5229\u4ED6\u4E3B\u4E49\u6EE1\u8DB3\u6548\u679C\uFF1A\u5728\u56DE\u5408\u5F00\u59CB\u65F6\uFF0C\u4F7F3x3\u7684\u6240\u6709\u68CB\u5B50\u5FC3\u60C5+1\r\n\u5229\u4ED6\u4E3B\u4E49\u75DB\u82E6\u6548\u679C\uFF1A\u65E0\u6CD5\u79FB\u52A8\r\n"
   BaseMovementCount: 1
   InitialMoodLevel: 2
   MoodEffects:
@@ -22,6 +22,15 @@ MonoBehaviour:
     MaxMood: 4
     OnTurnStartEffects:
     - Type: 3
+      Value: 1
+      Range: 1
+      TargetType: 0
+    OnTurnEndEffects: []
+  - EffectName: "\u5229\u4ED6\u4E3B\u4E49\u75DB\u82E6\u6548\u679C"
+    MinMood: 0
+    MaxMood: 0
+    OnTurnStartEffects:
+    - Type: 9
       Value: 1
       Range: 1
       TargetType: 0
