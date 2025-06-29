@@ -234,7 +234,7 @@ public class BoardManager : MonoBehaviour
         int totalPieceCount = _friendlyPieces.Count + _enemyPieces.Count;
         int maxFromPieceConstraint = (boardWidth * boardHeight) - (totalPieceCount * 2);
         int maxFromBoardFractionConstraint = (boardWidth * boardHeight) / 3;
-        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint);
+        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint, 10);
         // 计算当前棋盘上所有障碍物的总数
         int actualTotalObstacleCount = 0;
         foreach (var tile in _tileDict.Values) // 使用缓存的_tileDict
