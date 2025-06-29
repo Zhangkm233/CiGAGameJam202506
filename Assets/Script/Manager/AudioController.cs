@@ -4,7 +4,8 @@ public class AudioController : MonoBehaviour
 {
     //用于播放背景音乐和音效的控制器
     public AudioClip[] audioClips;
-    public AudioClip hitSfx;
+    public AudioClip clickSfx;
+    public AudioClip dropPieceSfx;
     public AudioSource sfxSource;
     public AudioSource bgmSource;
     public int clipsIndex = 0;
@@ -37,7 +38,11 @@ public class AudioController : MonoBehaviour
         sfxSource.PlayOneShot(audioclip);
     }
 
-    public void PlayXXX() {
-        
+    public void PlayClick() {
+        PlaySfx(clickSfx);
+    }
+
+    public void PlayDropPiece() {
+        PlaySfx(dropPieceSfx);
     }
 }

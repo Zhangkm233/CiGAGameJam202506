@@ -26,6 +26,8 @@ public class BoardManager : MonoBehaviour
     [Header("性格配置")]
     public Personality PersonalityGeneral;
     public List<Personality> pawnPersonalities;
+    [Header("游戏控制器")]
+    public AudioController audioController; // 音频控制器引用，用于播放音效
     // --- 障碍物设置 ---
     [Header("障碍物设置")]
     [Tooltip("在回合开始时刷新障碍物的概率（0到1）。当障碍物数量超过限制时，必定触发刷新。")]
@@ -612,6 +614,7 @@ public class BoardManager : MonoBehaviour
         // 真正的攻击(吃子)逻辑，将在动画结束后的回调中执行。
         piece.MovingAnimation(oldPos,targetPos,targetPiece,() => {
             AddPiece(piece,targetPos);
+            audioController.PlayDropPiece();
             piece.CurrentMovementCount--;
             UpdatePieceMove(piece);
         });
