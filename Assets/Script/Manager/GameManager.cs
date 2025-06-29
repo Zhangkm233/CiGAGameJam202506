@@ -60,6 +60,12 @@ public class GameManager : MonoBehaviour
         StateMachine.ChangeState(new GamePlayState(this));
     }
 
+    // UI按钮调用：显示团队介绍
+    public void ShowTeamInfoState()
+    {
+        StateMachine.ChangeState(new TeamInfoState(this));
+    }
+
     // 当“将”被击败时触发游戏结束
     public void TriggerGameOver()
     {
@@ -109,6 +115,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // --- TeamInfoState: 团队介绍状态 ---
+    public class TeamInfoState : GameState
+    {
+        private GameManager _manager;
+        public TeamInfoState(GameManager manager) { _manager = manager; }
+        public override void OnEnter()
+        {
+            Debug.Log("进入状态：团队介绍");
+            if (_manager.mainMenuPanel != null) _manager.mainMenuPanel.SetActive(false);
+            if (_manager.gamePanel != null) _manager.gamePanel.SetActive(false);
+            if (_manager.gameOverPanel != null) _manager.gameOverPanel.SetActive(false);
+            if (_manager.teamInfoPanel != null) _manager.teamInfoPanel.SetActive(true);
+        }
+        public override void OnExit()
+        {
+            if (_manager.teamInfoPanel != null) _manager.teamInfoPanel.SetActive(false);
+        }
+    }
+
     // --- GamePlayState: 游戏进行状态 ---
     public class GamePlayState : GameState
     {
@@ -141,7 +166,8 @@ public class GameManager : MonoBehaviour
             }
 
             // 2. 隐藏主界面，显示游戏界面
-            sequence.AppendCallback(() => {
+            sequence.AppendCallback(() =>
+            {
                 if (_manager.mainMenuPanel != null) _manager.mainMenuPanel.SetActive(false);
                 if (_manager.gamePanel != null) _manager.gamePanel.SetActive(true);
             });
@@ -158,7 +184,8 @@ public class GameManager : MonoBehaviour
                 sequence.AppendInterval(animationDuration);
             }
 
-            sequence.OnComplete(() => {
+            sequence.OnComplete(() =>
+            {
                 // 4. 初始化棋盘
                 Debug.Log("初始化棋盘...");
                 _manager.boardManager.InitializeBoard();
