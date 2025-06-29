@@ -236,7 +236,7 @@ public class BoardManager : MonoBehaviour
         int totalPieceCount = _friendlyPieces.Count + _enemyPieces.Count;
         int maxFromPieceConstraint = (boardWidth * boardHeight) - (totalPieceCount * 2);
         int maxFromBoardFractionConstraint = (boardWidth * boardHeight) / 3;
-        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint, 10);
+        int maxTotalObstacles = Mathf.Min(maxFromPieceConstraint, maxFromBoardFractionConstraint, 20);
         // 计算当前棋盘上所有障碍物的总数
         int actualTotalObstacleCount = 0;
         foreach (var tile in _tileDict.Values) // 使用缓存的_tileDict
@@ -499,7 +499,12 @@ public class BoardManager : MonoBehaviour
         // 获取棋子最终要落到的世界坐标
         Vector3 targetWorldPosition = GetWorldPosition(pos);
 
-
+        if (_pieceDict.ContainsKey(pos) && _pieceDict[pos] != piece)
+        {
+            Debug.LogWarning($"尝试将棋子 {piece.name} 放置到已被棋子 {_pieceDict[pos].name} 占用的位置 {pos}。操作取消。");
+            // 如果目标位置已被其他棋子占用，则直接返回，不进行任何操作
+            return;
+        }
         float fallHeight = 10f; // 调整下落起始高度
         Vector3 startFallPosition = targetWorldPosition + Vector3.up * fallHeight;
         
